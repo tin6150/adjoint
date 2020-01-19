@@ -274,22 +274,11 @@ mapbox
 			<!-- Meteorological Episode, formerly seasonSelectorUI -->
             <select id="seasonSelectorUI">
                 <option value="NA"  disabled >Episode</option>	       
-                <option value="Spr">Jun</option>
-                <option value="Sum">Jun (171)</option>
-                <option value="Sum" selected="selected">Jul (209)</option>
-                <option value="Aug">Aug (224)</option>
-                <option value="Win">Sep (258)</option>
+                <option value="171">Jun</option>
+				<option value="Sum" selected="selected">Jul</option><!-- value="209" -->
+                <option value="224">Aug (224)</option>
+                <option value="258">Sep (258)</option>
                 <option value="All">All Average</option>
-                <option value="Tr">.??.</option>
-                <option value="AvgO3-24h" >Avg. O3 - 24 hr</option>
-                <option value="PeakO3-24h">Peak O3 - 24 hr</option>
-                <option value="AvgO3-72h" >Avg. O3 - 24 hr</option>
-                <option value="Win"       >Peak O3 - 72 hr</option>
-                <option value="Tr">.??.</option>
-                <option value="O3north">O3 North</option>
-                <option value="O3north">O3 South</option>
-                <option value="O3north">O3 West</option>
-                <option value="O3north">O3 All</option>
              </select>
 
 			<!-- Pollutant Type / Precursor, formerly sourceSelectorUI -->
@@ -314,7 +303,7 @@ mapbox
 
 			<!-- hour mixing, formerly hourSelectorUI -->
             <select id="hourSelectorUI"> <!--mixing depends on time of day-->
-                <option value="NA"  disabled >Mixing Hours</option>	       
+                <option value="NA" disabled >Mixing Hours</option>	       
                 <option value="Al">All hours</option>
                 <option value="Hi">High mixing</option>  
                 <option value="Lo" selected='selected'>Low  mixing</option>
