@@ -52,6 +52,7 @@ mapbox tin117
 	} 
 
 	/* from https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/ for population density legend */
+    /* scale bar in bottom left ? */
 	.legend {
 	    /*background-color: rgba(255,255,255,0.65);   /* #fff;*/
         background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
@@ -151,7 +152,7 @@ mapbox tin117
 	    background-color: rgba(250,224,224,0.65);   /* blue greenish? */
 	}
 
-	/* top box for user input -- need more tweaking*/
+	/* top box for user input */
 	.inputCss {
 	    /*background-color: rgba(250,224,224,0.65);   /* blue greenish? */
 	    /*border-radius: 3px; */
@@ -172,7 +173,7 @@ mapbox tin117
 	    z-index: 5;		/* 1 appear behind copyright link; 5 would cover it. I have another (i) for the link :) */
 	}
 
-    /* feature info box in bottom right */
+    /* feature info box in bottom right.  show value to user as mouse hoover an grid/polygon. */
     .map-overlay-features {
         visibility: visible; /* hidden */
         position: absolute;
@@ -197,19 +198,21 @@ mapbox tin117
         visibility: visible; /* ++2020.0119 DBG++ hidden; /* visible */
         position: absolute;
         top: 0;
-        margin-top: 40px;    /* so that it appears below the drop down selectors */
+        margin-top: 70px; /*40px;    /* so that it appears below the drop down selectors.  40px for single line of names, 70px for 2 lines */
         margin-right: 50px;  /* so that it has room for the zoom control buttons */
         right: 0;
-        background: rgba(250, 250, 250, 0.4);  /* 255 255 255 is pure white */
-        width: 440px;     height: 500px;      /* good for lots of data */
+        /*background: rgba(250, 250, 250, 0.4);  /* 255 255 255 is pure white */
+        background: rgba(20, 250, 20, 0.4); 
+        width: 666px;     height: 720px;      /* good for huge amount of data */
+        /*width: 440px;     height: 500px;      /* good for lots of data */
         /*width: 300px;     height: 200px;        /* just for map addLayer status */
         overflow: auto;
         border-radius: 3px;
-        font: 14px/14px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
+        font: 12px/12px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
         /*font-family: Arial, sans-serif;*/
     }
 
-	/* feedback debug info box in top right -- was bottom left */
+    /* this fit a tiny print in bottom right about what layer is loaded */
 	.map-overlay-feedback-dbg {
 	  position: absolute;
 	  bottom: 0; right: 0;   /**/
@@ -572,7 +575,7 @@ var calculatorMode = "distance";  // "rate" is the other calculator
 //var rateInput4distCalc = 5.0;   		  // in ou/s     
 //var distInput4rateCalc = 1000;		  // in m
 
-$("#scaleSelectorUI").hide();  // do not show the 100% scale selector.  remove hack when adjoin data is finally adopted and not just showing odor data ++FIXEM 2020.0118
+//--$("#scaleSelectorUI").hide();  // do not show the 100% scale selector.  remove hack when adjoin data is finally adopted and not just showing odor data ++FIXEM 2020.0118
 
 $("#ShowCalculator").click( function() {
 	console.log("#ShowCalculator was clicked" );
@@ -720,15 +723,6 @@ var map = new mapboxgl.Map({
     
 });
 
-
-// these should not be needed anymore, cuz took out pop data county vs state zoom changes
-// begin zoom control for state/county choropleth
-//var zoomThreshold = 4;  // flip beween state vs county density
-//var zoomThresholdAQI = 6;  // flip between county population density vs air quality  (for scale, maybe opacity)
-// maybe useful again later if have bubble for site location, but then don't want to use it when zoom is high to the detail of the simulation data.
-
-// end of state/county choropleth
-
 //-color gradient from choropleth tutorial  https://www.mapbox.com/help/choropleth-studio-gl-pt-2/
 //-var layers = ['0-10', '10-20', '20-50', '50-100', '100-200', '200-500', '500-1000', '1000+'];
 //-var colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
@@ -738,7 +732,7 @@ var map = new mapboxgl.Map({
 
 
 // modeleed after styleCountyPolys(poly_data_field) 
-function styleZwedcPolys(attribute) {
+function styleScaleLegendPolys(attribute) {
     return [
       'interpolate',
       ['linear'],
@@ -760,7 +754,7 @@ function styleZwedcPolys(attribute) {
 };
 
 // the attribute, 'max', don't do anything here
-function styleZwedcOpacity(attribute) {
+function styleScaleLegendOpacity(attribute) {
     return [
       'interpolate',
       ['linear'],
@@ -777,25 +771,6 @@ function styleZwedcOpacity(attribute) {
     ]
 };
 
-// this not used anymore, but kept for ref till color scale/opacity verified to work
-function styleZwedcOpacity_old10Gradient(attribute) {
-    return [
-      'interpolate',
-      ['linear'],
-      ['get', attribute],
-		// Tyler's framework used 10 entries here 
-               0.0, 0.05,              // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
-                0.5, 0.15,
-                0.7, 0.25,
-                1.0, 0.35,
-                2.5, 0.45,
-                5.0, 0.50,
-                7.5, 0.55,
-                10,  0.65,
-                20,  0.70,
-                25,  0.75
-    ]
-};
 
 // find out what combination is selected in the form selections UI ... eventually trigger loading maplayer...   
 // depending on combination, unload and load new layer data, then update map.  no need to do new map
@@ -853,10 +828,10 @@ function getInputFormSelection() {
                     'fill-antialias': false,    // remove gridline
                     //'fill-color': 'rgba(61,153,80,0.55)',                    // https://www.mapbox.com/help/how-web-apps-work/#use-mapbox-gl-js-with-react ##
                     // see git log 1dff205 for older version that had 'table' and in-place code here for fill-color and fill-opacity
-                    'fill-color': styleZwedcPolys('max'),
+                    'fill-color': styleScaleLegendPolys('max'),
                     //'fill-opacity': polyLayerOpacity,
                     //'fill-opacity': 0.2
-                    'fill-opacity': styleZwedcOpacity('max') // max attribute just a place holder
+                    'fill-opacity': styleScaleLegendOpacity('max') // max attribute just a place holder
             }
         });  // end map.addLayer(...) for zwedc/caair        
         document.getElementById('featuresDbg').innerHTML = "map.addLayer status:"  + addStatus + "--EndStatus--";  // dont give any info, always just 'Object object'
@@ -869,7 +844,7 @@ function getInputFormSelection() {
         // below for flyTo specific site, if it has changed
         currentLoadedMapSource = inputFormSelection;       // can't use "this." just remember this is "global var"
         //currentSite = document.getElementById("siteSelectorUI").value;
-        currentSite = "SjFresno"; // adjoin dont really need this, but initial FlyTo let it center near Fresno
+        currentSite = "SjFresno"; // adjoin dont really need this, but on-load FlyTo let it center near Fresno
         console.log( "currentSite  (make sure it is defined):"  );
         console.log( currentSite  );
         console.log( "lon:  (make sure it is not NaN)"  );
@@ -939,54 +914,7 @@ function buildLonLatHash() {
 
 
 
-function buildLonLatHashFromQuery_dontWork_abandoningForNow() {
-    // turns out there is no way to ask the API to return the lon/lat using querySourceFeatures 
-    // maybe use Dataset, but for demo, going to hard code the lon/lat into the function and use that for flyTo
-    // will use python script to generate code snipplet so that don't have to write lot of code each time get new data
-    // http://gregorthemapguy.blogspot.com/2017/11/more-mapbox-using-querysourcefeatures.html
-    
-    console.log( '--dbg-- buildLonLatHashFromQuery begin' );
 
-    //##
-    //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-pt-ctr'] });               // restrict to layer to easier pick feature...
-    // https://docs.mapbox.com/mapbox-gl-js/api/#map#querysourcefeatures
-    var featuresSiteInfoLoadedQ = map.isSourceLoaded('sites_info_pt');
-    //-featuresSiteInfo = {} ; // tmp
-    console.log( 'featuresSiteInfoLoadedQ ie map.isSourceLoaded :' );
-    console.log( featuresSiteInfoLoadedQ );                                // false.  so, data still not accessible here?  not yet?  wait??
-    // if source is not loaded, then querySourceFeatures would get nothing... which seems to be the current problem :-(                         ## <<< Houston, we got a problem.  
-    // data loaded may also only be visible part of map.  so may not have all the data points i need depending on current view selected by user.
-
-    //var dbgGetLayer = map.getLayer('sites_info_pt_ctr');    // sites_info_pt_ctr is addLayer manually in this JS, sites-info-pt-ctr is from styling by mapbox studio, which isn't accessible here
-    var dbgGetLayer = map.getLayer('sites_info_pt');          // sites_info_pt_ctr is addLayer manually in this JS, sites-info-pt-ctr is from styling by mapbox studio, which isn't accessible here
-    console.log( "dbgGetLayer:" + dbgGetLayer );              // ok, something here now...   
-    console.log( dbgGetLayer );    
-        
-    //var featureSiteInfo = map.querySourceFeatures('sites_info_pt_ctr');   // this is getting blank :(          
-    var featureSiteInfo = map.querySourceFeatures('sites_info_pt');         // this is getting blank still :(   
-    console.log( "featureSiteInfo: " + featureSiteInfo);
-    console.log(  featureSiteInfo);
-    
-    //var   featureSiteInfo = map.getLayer('sites_info_pt');  // dont seems to find lon/lat data, hugely nested obj structure 
-    //featureSiteInfo_json = featureSiteInfo;
-    featureSiteInfo_json = JSON.stringify(featureSiteInfo);
-    console.log( "featureSiteInfo json: " + featureSiteInfo_json);
-    console.log(  featureSiteInfo_json);
-    console.log( "featureSiteInfo json: end");
-
-    sitesCount = featureSiteInfo.length;
-    sitesCount = 0; //tmp, well no more, since can't retrieve the data.  abandoned.
-    console.log( "sitesCount is: " + sitesCount);
-    lon_tba = "tba";
-    for (i=0; i<=sitesCount; i++) {
-        console.log( "siteCount at: " + i )
-        //~~lon_tba = featureSiteInfo[i].properties.site_name ;
-        //--     "" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
-        console.log( lon_tba );
-    }
-    console.log( '--dbg-- buildLonLatHashFromQuery end' );
-} // end buildLonLatHashFromQuery
- 
 // ################################################################################# //
 // ################################################################################# //
 // #### this look like start of execution of javascript code                    #### //
@@ -1025,7 +953,7 @@ map.on('load', function () {
             "line-width": 1
         }
     });  // end map.addLayer(...)
-
+    console.log("--dbg-- at map.on('load'...) completed addLayer for countour" );
 
     //~ diff between "this.", "window." and just plain variable names.  in summary, don't use "this." to refer to "global", in browser need to use "window." or no prefix for the namespace
     //~this.dbgTracer += " -this- aftAddLayerSite_info_pt \t";
@@ -1101,8 +1029,8 @@ map.on('mousemove', function (e) {
 	      //['caair'] 
       });
       if (features.length > 0) {
-           ouVal = features[0].properties.value   ;   // adjoin O3, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
-           //ouVal = features[0].properties.max   ;   // odor
+           //ouVal = features[0].properties.value   ;   // adjoin O3, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
+           ouVal = features[0].properties.max   ;   // odor
            if( ouVal < 0.01 ) {
                 ouValString = ouVal.toExponential(1) ;
            } else {
@@ -1122,10 +1050,10 @@ map.on('mousemove', function (e) {
 
       // this next one not limited to any layer -- ie query all layers
       // and provide debug info for all fetures
-      //var featuresSiteInfo = map.queryRenderedFeatures(e.point);
-      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-pt-ctr'] });      
-      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-polyg'] });                     // used in smelly, not currently avail/needed for adjoin
-      var featuresSiteInfo = {}
+      var featuresSiteInfo = map.queryRenderedFeatures(e.point);
+      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-pt-ctr'] });    
+      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-polyg'] });     // layer name in the style used by smelly
+      //var featuresSiteInfo = {}
       document.getElementById('featuresDbg').innerHTML = "DBG:" + JSON.stringify(featuresSiteInfo, null, 2);      // this display  in top right  featuresDbg box  inside map-overlay-features-dbg ##
       // rest actually want to add to existing bottom right map-overlay-features box
       if (featuresSiteInfo.length > 0) {
@@ -1155,40 +1083,12 @@ map.addControl( new mapboxgl.NavigationControl(), 'top-right');
 
 map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector('body')}));
 
-// trying to add Ruler or change style...
-// https://bravecow.github.io/mapbox-gl-controls/
-// don't know if there is any released under 
-// https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-controls ...
-// import { RulerControl } from 'mapbox-gl-controls;
-// const mapboxglctrl = require('mapbox-gl-controls');   // js not understanding import or require.  need help!!
-// map.addControl(new RulerControl(), 'top-right');
-
-
-// trying to add style control // NOT defined, need to npm install ... 
-//map.addControl(new StylesControl(), 'top-left');
-/*
-map.addControl(new StylesControl([{
-  name: 'Streets',
-  url: 'mapbox://styles/mapbox/streets-v9'
-}, {
-  name: 'Satellite',
-  url: 'mapbox://styles/mapbox/satellite-v9'
-}, {
-  name: 'Dark',
-  url: 'mapbox://styles/mapbox/dark-v9'
-}]), 'top-left');
-*/
-// Use style.load event to redraw layers when style has changed:
-//map.on('style.load', () => { /* redraw layers */ });
-
-
 // https://www.mapbox.com/mapbox-gl-js/api/#attributioncontrol
 //map.addControl(new mapboxgl.AttributionControl({
 map.addControl(new mapboxgl.AttributionControl({
         compact: true,  // set to false to add an EXTRA line with info below prefixed.  true add an (i) icon
         customAttribution: '<A HREF="https://github.com/lbnl-scienceit/adjoin"> © Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown @ LBNL</A>'
 }));
-
 
 // https://www.mapbox.com/mapbox-gl-js/api/#scalecontrol  // added to bottom, clobbering legend.
 var scale = new mapboxgl.ScaleControl({
