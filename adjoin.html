@@ -4,7 +4,7 @@
 
 <!--
 Adjoin 
-mapbox
+mapbox tin117
 -->
 <head>
     <meta charset='utf-8' />
@@ -270,7 +270,6 @@ mapbox
             <select id="receptorSelectorUI"> <!-- site -->  <!--to emulate Tyler <select id="polygon-layer-selector"> -->
                 <option value="NA"        disabled           >Receptor </option>	       
                 <option value="DAC-topo3" selected="selected">DAC-topo3</option>	
-                <option value="SjFresno" selected="selected">DAC-topo3</option>	
             </select>
 
 			<!-- Meteorological Episode, formerly seasonSelectorUI -->
@@ -296,7 +295,7 @@ mapbox
            </select>
 
 		    <!-- Sensitivity Type (new) -->
-            <select id="sesitivitySelectorUI">
+            <select id="sensitivitySelectorUI">
                 <option value="NA" disabled >Sensitivity</option>	       
                 <option value="Sp">S+</option>
                 <option value="Sx">Sx</option>
@@ -600,7 +599,8 @@ $("#CalculateButton4rateCalc").click( function() {
 function getCurrentSite() {
 	// retrieve site name, so that formula knows which set of weights to use, 
 	// also set text of calculator accordingly
-	currentSite = document.getElementById("siteSelectorUI").value;
+	// currentSite = document.getElementById("siteSelectorUI").value;
+    currentSite = "SjFresno"; //adjoin dont need this
 	return currentSite;
 };
 
@@ -691,11 +691,11 @@ var map = new mapboxgl.Map({
     //center: [-121.985287624997,37.4077223978109],  // data point from TMP test, in santa clara!
     //zoom: 19   	// odor data tileset is said to be z0-z19, 19+ will "appear simplified"
     //zoom: 16    	// see building shape, needed cuz 50m x 50m (or 25m?)
-    //zoom: 15    	// see buildings, needed cuz 50m x 50m (or 25m?)
+    //zoom: 15    	// see buildings, needed cuz 50m x 50m (or 25m?)   //++ maybe for dbg use to reduce map load
     //zoom: 14.2  	// zoomed in and good for zwedc demo with many low value data points // 1000 ft
     //zoom: 13.5  	// zoomed in
     //zoom: 12		// see whole coverate area of ZWEDC
-    zoom: 11 		// 1mi scale bar.  Fresno-Kerman vicinity,    with some data from previous project visible.  tmp use for now  //++FIXME
+    zoom: 11 		// 1mi scale bar.  Fresno-Kerman vicinity,    with some data from previous project visible.  // decent for dbg use
     //zoom: 10 		// 3mi scale bar.  Fresno-Kingsburg vicinity, with some data from previous project visible.  tmp use for now  //++FIXME
     //zoom: 10  	// circle filled point data is said to be z0-z10, 10+ will "appear simplified"  
     //zoom: 9  		// see most of BAAQMD   // 5mi 
@@ -852,7 +852,8 @@ function getInputFormSelection() {
         
         // below for flyTo specific site, if it has changed
         currentLoadedMapSource = inputFormSelection;       // can't use "this." just remember this is "global var"
-        currentSite = document.getElementById("siteSelectorUI").value;
+        //currentSite = document.getElementById("siteSelectorUI").value;
+        currentSite = "SjFresno"; // adjoin dont really need this, but initial FlyTo let it center near Fresno
         console.log( "currentSite  (make sure it is defined):"  );
         console.log( currentSite  );
         console.log( "lon:  (make sure it is not NaN)"  );
@@ -1009,35 +1010,6 @@ map.on('load', function () {
         }
     });  // end map.addLayer(...)
 
-    //------------- site_info point LAYER ------------ 
-    // originally thought needed to manually add the layer with site's coordinate, so then querySourceFeatures() can be used
-    // turn out that cannot work, thus created the buildLonLatHash() 
-    // this is no longer needed, but left it here so can refer to the code for building heatmap
-    // maybe later can have a bubble up icon like google maps location pin thing using this.
-    console.log("GL JS about to addLayer{ sites_info_pt ...}")
-    map.addLayer({
-        "id": "sites_info_pt__noLongerNeeded",      // style from mapbox studio should have a layer called 'sites-info-pt-ctr'
-        "source": {
-            type: "vector",
-            url:  'mapbox://' + mapboxUser + '.' + 'sites_info_pt_ctr' 
-            //url:  'mapbox://' + this.mapboxUser + '.' + 'sites_info_pt_ctr'       // hmm, apparently this.mapboxUser doesn't work here :(
-        },
-        'source-layer': 'sites_info_pt_ctr',
-        "layout": { 
-            visibility: 'none'   // dont really need the data to be visible on map at this point.  was using it for easier debugging.  
-        },
-        //"type": "symbol",
-        //"type": "heatmap",
-        "type": "circle",   // https://docs.mapbox.com/mapbox-gl-js/style-spec/#layers-circle
-        "paint": {
-            //'circle-radius': 50,
-            'circle-stroke-color': "#aa2288",   // magenta
-            'circle-stroke-width': 20,
-            'circle-stroke-opacity': 0.4,
-            //'fill-color': '#000000',  // for type:vector (polygon)
-            //'fill-opacity': 1.0       // for type:vector (polygon)
-        }
-    });
 
     //~ diff between "this.", "window." and just plain variable names.  in summary, don't use "this." to refer to "global", in browser need to use "window." or no prefix for the namespace
     //~this.dbgTracer += " -this- aftAddLayerSite_info_pt \t";
@@ -1070,14 +1042,14 @@ map.on('load', function () {
     // #### add handler for form selector
     var inputFormSelection = "";
     //-- Tyler's code has definition at this level
-    var poly_selector = document.getElementById("siteSelectorUI");  //##  Tin UI
+    var poly_selector = document.getElementById("precursorSelectorUI");  //##  Tin UI
     poly_selector.addEventListener('change', function(e) {
         //var testTin = "test123";
         getInputFormSelection();
 		calculateSeparationDistance();  // update calculator siteLocation info 
 		calculateRate();  // update calculator siteLocation info 
     });
-    var seasonSelector = document.getElementById("seasonSelectorUI");  
+    var seasonSelector = document.getElementById("episodeSelectorUI");  // adjoin
     seasonSelector.addEventListener('change', function(e) {
         getInputFormSelection();
     });
@@ -1085,11 +1057,11 @@ map.on('load', function () {
     hourSelector.addEventListener('change', function(e) {
         getInputFormSelection();                                            // FIXME these are the one throwing error about layer  // should be fine now.
     });
-    var sourceSelector = document.getElementById("sourceSelectorUI");  
+    var sourceSelector = document.getElementById("precursorSelectorUI");  // adjoin
     sourceSelector.addEventListener('change', function(e) {
         getInputFormSelection();
     });
-    var scaleSelector = document.getElementById("scaleSelectorUI");  
+    var scaleSelector = document.getElementById("sensitivitySelectorUI");  // adjoin, replaced scale  ++ CLEANUP
     scaleSelector.addEventListener('change', function(e) {
         getInputFormSelection();
     });
@@ -1134,7 +1106,8 @@ map.on('mousemove', function (e) {
       // and provide debug info for all fetures
       //var featuresSiteInfo = map.queryRenderedFeatures(e.point);
       //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-pt-ctr'] });      
-      var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-polyg'] });                     // may need to restrict to layer after all so that pick feature [0] rather than find it.  
+      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-polyg'] });                     // used in smelly, not currently avail/needed for adjoin
+      var featuresSiteInfo = {}
       document.getElementById('featuresDbg').innerHTML = "DBG:" + JSON.stringify(featuresSiteInfo, null, 2);      // this display  in top right  featuresDbg box  inside map-overlay-features-dbg ##
       // rest actually want to add to existing bottom right map-overlay-features box
       if (featuresSiteInfo.length > 0) {
