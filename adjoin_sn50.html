@@ -266,43 +266,42 @@ mapbox
 			<BUTTON id="ShowCalculator">Show Calculator</BUTTON>
 	-->
             <!--html element for drop down picker goes here-->
-			<!-- 1st data set for adjoin is DAC-topo3JulNOxSpAl.geojson -->
-            <select id="receptorSelectorUI"> <!-- site -->  <!--to emulate Tyler <select id="polygon-layer-selector"> -->
-                <option value="NA"        disabled           >Receptor </option>	       
-                <option value="DAC-topo3" selected="selected">DAC-topo3</option>	
+            <select id="siteSelectorUI"> <!-- site -->  <!--to emulate Tyler <select id="polygon-layer-selector"> -->
+                <option value="NA"       disabled           >Receptor </option>	       
                 <option value="SjFresno" selected="selected">DAC-topo3</option>	
             </select>
 
 			<!-- Meteorological Episode, formerly seasonSelectorUI -->
-            <select id="episodeSelectorUI">
+            <select id="seasonSelectorUI">
                 <option value="NA"  disabled >Episode</option>	       
-                <option value="Jun">Jun</option>
-				<option value="Jul" selected="selected">Jul</option><!-- value="209" -->
-                <option value="Aug">Aug</option>
-                <option value="Sep">Sep</option>
+                <option value="171">Jun</option>
+				<option value="Sum" selected="selected">Jul</option><!-- value="209" -->
+                <option value="224">Aug (224)</option>
+                <option value="258">Sep (258)</option>
                 <option value="All">All Average</option>
              </select>
 
 			<!-- Pollutant Type / Precursor, formerly sourceSelectorUI -->
-            <select id="precursorSelectorUI">
+            <select id="sourceSelectorUI">
                 <option value="NA" disabled >Precursor</option>	       
-                <option value="NOx">NOx</option>
-                <option value="AVOC">AVOC</option>
-                <option value="AVOC-a-k">AVOC-A(k)</option>
-                <option value="OLE1">OLE1</option>
-                <option value="ARO1">ARO1</option>
-                <option value="ETHENE">Ethene</option>
-                <option value="OCHO">OCHO</option>
+                <option value="Co">NOx</option>
+                <option value="Nc">AVOC</option>
+                <option value="Bi">AVOC-A(k)</option>
+                <option value="Re">OLE1</option>
+                <option value="Re">ARO1</option>
+                <option value="Re">Ethene</option>
+                <option value="Tr">OCHO</option>
+                <option value="Al">All</option>
            </select>
 
 		    <!-- Sensitivity Type (new) -->
             <select id="sesitivitySelectorUI">
                 <option value="NA" disabled >Sensitivity</option>	       
-                <option value="Sp">S+</option>
-                <option value="Sx">Sx</option>
+                <option value="Co">S+</option>
+                <option value="Nc">Sx</option>
            </select>
 
-			<!-- hour mixing, same name as before -->
+			<!-- hour mixing, formerly hourSelectorUI -->
             <select id="hourSelectorUI"> <!--mixing depends on time of day-->
                 <option value="NA" disabled >Mixing Hours</option>	       
                 <option value="Al">All hours</option>
@@ -311,14 +310,13 @@ mapbox
             </select>
 
 			<!-- scale no longer needed.  But EV vs AV vs TNC ? -->
-			<!-- but needed to get old data for now 
+			<!-- but needed to get old data for now -->
 			<select id="scaleSelectorUI">
                 <option value="NA"  disabled >Scale/Scenario</option>	       
                 <option value="10x" selected='selected' >EV</option>
                 <option value="110">AV</option>
                 <option value="110">TNC</option>
             </select>
-			-->
 
         </div><!-- end for inputbar -->
     </div><!-- end for "attribution2+inputbar"-->
@@ -542,8 +540,7 @@ $( function() {
         alert( "select triggered" );
     });
     //var uiSelection = $("inputPicker").$("site").val();
-    //document.getElementById('feedback').innerHTML = "sn5050\n" //+ uiSelection;
-    document.getElementById('feedback').innerHTML = "tin117\n" //+ uiSelection;
+    document.getElementById('feedback').innerHTML = "sn5050\n" //+ uiSelection;
 });
 </script>
 -->
@@ -640,15 +637,13 @@ function calculateRate() {
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////// mapbox code below ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-//mapboxgl.accessToken =   'pk.eyJ1Ijoic241MCIsImEiOiJjam8weWl0dm0wNWVhM3dubmgyb3hwaTZsIn0.2Cvl-nnhZAoavESou_RqiQ'; // Sn  (post?) 2018-12-07   pk = public token
-mapboxgl.accessToken =   'pk.eyJ1IjoidGluMTE3IiwiYSI6ImNrNWxnd21ydjBvc2UzZG8wanQzaGwzcGIifQ.3_B2PYgav56oacPlVu5u9w'; // tin117 2020.0119
+mapboxgl.accessToken =   'pk.eyJ1Ijoic241MCIsImEiOiJjam8weWl0dm0wNWVhM3dubmgyb3hwaTZsIn0.2Cvl-nnhZAoavESou_RqiQ'; // Sn  (post?) 2018-12-07   pk = public token
 var dbgTracer = "dbgTracerDeclared \t";
 var currentLoadedMapLayer  = "";
 var currentLoadedMapSource = "";
 var prevSite = "";
 var currentSite = "";
-//var mapboxUser = "sn50";
-var mapboxUser = "tin117";
+var mapboxUser = "sn50";
 // below are mostly for debuging use
 var getInputSelectorCounter = 0;
 var addLayerCounter = 0;
@@ -674,9 +669,7 @@ var map = new mapboxgl.Map({
     //style: 'mapbox://styles/sn50/cjrd1zmyy1kds2tp6k4az7apr',    // sites_info_polyg  with satellite street as base layer, too many colors, don't show data well.
     // #### wtf? mapboxstyles change here!
     //style: 'mapbox://styles/sn50/cjreie0fs4o0m2sqghg3ukiqn', 	// sites_info_pt_ctr with cali terrain     as base layer .  pt in center is pretty small, no need for TopLeft position.
-    //style: 'mapbox://styles/sn50/cjrekq65d4o7o2slw5x262rb0',	// sites_info_polyg  + sites_info_pt_topLeft  with cali terrain.  corner point turns out to be bottom left, but whatever. 
-    style: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6', // 2020.0119 tin117 Basic (light)
-
+    style: 'mapbox://styles/sn50/cjrekq65d4o7o2slw5x262rb0',	// sites_info_polyg  + sites_info_pt_topLeft  with cali terrain.  corner point turns out to be bottom left, but whatever. 
     
    
     // https://docs.mapbox.com/mapbox-gl-js/api/#attributioncontrol, but see the top part on options.attributionControl 
@@ -784,15 +777,13 @@ function styleZwedcOpacity_old10Gradient(attribute) {
 
 // find out what combination is selected in the form selections UI ... eventually trigger loading maplayer...   
 // depending on combination, unload and load new layer data, then update map.  no need to do new map
-// Need update this to pick new UI selector for adjoin 2020.0119.  
-// 1st input is DAC-topo3JulNOxSpAl.geojson
 function getInputFormSelection() {
         getInputSelectorCounter++;
-        inputFormSelection  = document.getElementById("receptorSelectorUI").value;
-        inputFormSelection += document.getElementById("episodeSelectorUI").value;;
-        inputFormSelection += document.getElementById("precursorSelectorUI").value;;
-        inputFormSelection += document.getElementById("sensitivitySelectorUI").value;;
+        inputFormSelection  = document.getElementById("siteSelectorUI").value;
+        inputFormSelection += document.getElementById("seasonSelectorUI").value;;
         inputFormSelection += document.getElementById("hourSelectorUI").value;;
+        inputFormSelection += document.getElementById("sourceSelectorUI").value;;
+        inputFormSelection += document.getElementById("scaleSelectorUI").value;;
         feedback.innerHTML  = inputFormSelection;					
         if( currentLoadedMapLayer != "" ) {
             // https://docs.mapbox.com/mapbox.js/example/v1.0.0/layers/
@@ -828,8 +819,7 @@ function getInputFormSelection() {
                 type: 'vector',
                 //url: 'mapbox://sn50.aae3dmkj'   // ZWEDC 25x25 sq first test data set (at 10x?)
                 //url:   'mapbox://sn50.SfZwedcSprHiBi10x' 	                // 2nd csv2gson upload    ... next, try to make way to toggle between them.   hmm. ready to upload em all!
-                //url:   'mapbox://' + mapboxUser + "." + inputFormSelection  // caair
-                url:   'mapbox://' + mapboxUser + "." + inputFormSelection // 2020.0119 tin117 adjoin may need change here
+                url:   'mapbox://' + mapboxUser + "." + inputFormSelection
             },
             //'source-layer': 'ZWEDC_50x50m-29q7xv',	// retrieved from mapbox web site Tile management...  [1st dummy test data]
             //'source-layer': 'SfZwedcSprHiBi10x',	// no username prefix here!! duh!!
@@ -995,8 +985,7 @@ map.on('load', function () {
         "type": "line",
         "source": {
             type: 'vector',
-            url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair
-            //url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' // 2020.0119 tin117
+            url: 'mapbox://mapbox.mapbox-terrain-v2'
         },
         "source-layer": "contour",
         "layout": {
