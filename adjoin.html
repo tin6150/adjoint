@@ -177,7 +177,7 @@ mapbox tin117
     .map-overlay-features {
         visibility: visible; /* hidden */
         position: absolute;
-        height: 100px;      /* smelly 240px */
+        height: 160px;      /* smelly 240px */
         width:  300px;      /* formerly 328px, 220px, 300px - needed more space cuz longer title now */
         margin-top: 10px;
         margin-bottom: 22px;
@@ -208,7 +208,7 @@ mapbox tin117
         /*width: 300px;     height: 200px;        /* just for map addLayer status */
         overflow: auto;
         border-radius: 3px;
-        font: 12px/12px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
+        font: 13px/13px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
         /*font-family: Arial, sans-serif;*/
     }
 
@@ -843,6 +843,7 @@ function getInputFormSelection() {
         });  // end map.addLayer(...) for zwedc/caair        
         document.getElementById('featuresDbg').innerHTML = "map.addLayer status:"  + addStatus + "--EndStatus--";  // dont give any info, always just 'Object object'
         feedback.innerHTML = inputFormSelection; // + " - layerAdded";
+        console.log( "--dbg-- getInputFormSelection() :: layerAdded:" + inputFormSelection );
         this.className = 'active';   // from mapbox layer eg... not sure what it does :(
         
         // above to load layer and draw
@@ -873,7 +874,6 @@ function getInputFormSelection() {
         } else {
             console.log( " site change eval to false, no flying"  );
         }
-        
         
         //--    $( "inputPicker" ).select( function() { alert( "select triggered" ); });
 }; //end fn getInputFormSelection 
@@ -993,12 +993,12 @@ map.on('load', function () {
     // #### add handler for form selector
     var inputFormSelection = "";
     //-- Tyler's code has definition at this level
-    var poly_selector = document.getElementById("precursorSelectorUI");  //##  Tin UI
+    var poly_selector = document.getElementById("receptorSelectorUI");  // adjoin
     poly_selector.addEventListener('change', function(e) {
         //var testTin = "test123";
         getInputFormSelection();
-		calculateSeparationDistance();  // update calculator siteLocation info 
-		calculateRate();  // update calculator siteLocation info 
+		//--calculateSeparationDistance();  // update calculator siteLocation info 
+		//--calculateRate();  // update calculator siteLocation info 
     });
     var seasonSelector = document.getElementById("episodeSelectorUI");  // adjoin
     seasonSelector.addEventListener('change', function(e) {
@@ -1031,10 +1031,12 @@ map.on('load', function () {
 map.on('mousemove', function (e) {
       var text2display = "";
 
+      // #### Query for layer info and display it in feature box at bottom right (meter reading box) #### //
       var features = map.queryRenderedFeatures(e.point, { layers: 
 	      [currentLoadedMapLayer] 
 	      //['caair'] 
       });
+      //console.log("map.on('mousemove'... currentLoadedMapLayer: " + currentLoadedMapLayer);  // too much log.  it was fine
       if (features.length > 0) {
            // display ozone measurements (formerly odor OU value) in a "meter reading box"
            //ouVal = features[0].properties.value   ;   // adjoin O3, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
@@ -1065,9 +1067,9 @@ map.on('mousemove', function (e) {
       document.getElementById('featuresDbg').innerHTML = "DBG:" + JSON.stringify(featuresSiteInfo, null, 2);      // this display  in top right  featuresDbg box  inside map-overlay-features-dbg ##
       // rest actually want to add to existing bottom right map-overlay-features box
       if (featuresSiteInfo.length > 0) {
-		        popDen2display = Math.round(featuresSiteInfo[0].properties.pop_density/100)*100;  // could not use toPrecision, so tricking it this way to display to nearnest 100s
+		    popDen2display = Math.round(featuresSiteInfo[0].properties.pop_density/100)*100;  // could not use toPrecision, so tricking it this way to display to nearnest 100s
             text2display += "<BR>\n" 
-		      + "Facility: "    + featuresSiteInfo[0].properties.facility     + "<BR>\n"  
+		      /// + "Facility: "    + featuresSiteInfo[0].properties.facility     + "<BR>\n"  
 		      //~ +"Pop Density: " + featuresSiteInfo[0].properties.pop_density.toPrecision(3)  + "<BR>\n"  
 		      + "Pop Density: " + popDen2display + " person/mile²<BR>\n"     //maybe get from a census layer...
 		      + "Terrain: "     + featuresSiteInfo[0].properties.terrain      + "<BR>\n"  
