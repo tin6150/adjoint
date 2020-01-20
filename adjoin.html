@@ -54,7 +54,7 @@ mapbox tin117
 	/* from https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/ for population density legend */
 	.legend {
 	    /*background-color: rgba(255,255,255,0.65);   /* #fff;*/
-            background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+        background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
 	    border-radius: 3px;
 	    bottom: 60px; /* 30px; */  /* use 60px if have scale, 30px w/o scale ruler bar */
 	    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
@@ -95,7 +95,7 @@ mapbox tin117
 	  left: 0;    /* 0 before rotate */
 	  /*right: 3;     /* */
 	  /*background: rgba(250, 250, 250, 0.9);  /* 255 255 255 is pure white */
-          background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+      background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
 	  margin-left: 6px; 
 	  margin-right: 46px; 
 	  /*overflow: auto;*/
@@ -136,8 +136,8 @@ mapbox tin117
 	  left: 0;    /* 0 before rotate */
 	  /*right: 3;     /* */
 	  /*background: rgba(250, 250, 250, 0.9);  /* 255 255 255 is pure white */
-          background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
-          /*background: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+      background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+      /*background: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
 	  margin-left: 6px; 
 	  margin-right: 46px; 
 	  /*overflow: auto;*/
@@ -163,9 +163,9 @@ mapbox tin117
 	    /*left: 100px;  /* this leaves a gap to the left where slider start */
 	    /*height: 100%;   /* use this if doing vertically positioned slider bar*/
 	    position: absolute;
-            margin-top: 6px;
-            /*margin-right: 100px;       /* margin-left and width combined to position the slider in center; but mapbox logo is num of pixels :( */
-            /*margin-left: 100px;       /* margin-left and width combined to position the slider in center; but mapbox logo is num of pixels :( */
+        margin-top: 6px;
+        /*margin-right: 100px;       /* margin-left and width combined to position the slider in center; but mapbox logo is num of pixels :( */
+        /*margin-left: 100px;       /* margin-left and width combined to position the slider in center; but mapbox logo is num of pixels :( */
 	    /*width: 300px;       /* create scroll bar when screen is too narrow... 84% seems ok compromise  */
             opacity: 0.9;
 	    /* right: 10px; */    /* can move scale legend to right with this */
@@ -192,9 +192,9 @@ mapbox tin117
         border-radius: 3px;
     }
 	
-    /* debug info box to display tileset features info - top right - hidden when not in use */
+    /* debug info box to display tileset features info - top right - hidden when not in use   // no useful data for adjoin? */
     .map-overlay-features-dbg {
-        visibility: hidden; /* visible */
+        visibility: visible; /* ++2020.0119 DBG++ hidden; /* visible */
         position: absolute;
         top: 0;
         margin-top: 40px;    /* so that it appears below the drop down selectors */
@@ -262,7 +262,9 @@ mapbox tin117
 
 
 	<div id="inputbar"><!-- class="inputCss"> -->
-		<!--    FIXME calculator disabled till complete development
+        <!--    FIXME calculator disabled till complete development
+            calculator should be done, at least on smelly (unless this was not the latest code)
+            button can perhaps be repurposed for help/info "pop up" in the future
 			<BUTTON id="ShowCalculator">Show Calculator</BUTTON>
 	-->
             <!--html element for drop down picker goes here-->
@@ -468,26 +470,39 @@ mapbox tin117
 
     <!-- legends  from https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/ -->
     <!--<div id='legend' class='legend' style='display: none;'> -->
-    <!-- scale wanted by Ling
-    <=0.001, 
-    0.001-0.01, 
-    0.01-0.1, 
-    0.1-1, 
-    1-5, 
-    5-30, 
-    30-100, 
-    >=100
-    (fewer classes than before.  also need to adjust in 'function styleZwedcPolys' 
+    <!-- ++TODO
+    // adjoin scale explanation by Ling:
+
+    The unit is for S+ sensitivity, for each grid, the value =  change in ozone in the receptor (purple line marked region) when adding a unit of emission rate of NOx (or AVOC) to that grid. 
+
+    The unit is ppb (ozone change at the receptor) per gram of NOx (or AVOC) emitted per second per km2.   
+
+    We may change the unit to be ppb per kg of emission per day or per year per grid later, but the units are interchangeable by some unit conversion. 
+    But essentially, they all mean how much ozone at the receptor will change in response to a unit (defined by us) addition of emissions at a given grid.
+
+    ////
+
+    So as the value of any given grid location basically represents the potential influence of unit emissions from that grid on a receptor community, 
+    essentially we are mapping out all influential source locations with respect to that community that we wanna protect.
+
+    The webtool will provide people a visual aid to navigate within and around a certain community to identify places 
+    where they wanna reduce emissions or avoid adding new emissions (e.g. built a plant) in order to maximize the benefit of protecting air quality of that community.
+
+    Does that make sense?
+
+    Below is just legend, not how actually colored!
+    xref: adjoinScale
     -->
     <div id='legend' class='legend' >
-        Peak Ozone (demo mockup only³):
+        <!--3³-->
+        Ozone change (ppb): 
         <div><span style='background-color: #f2f3f4'></span>0.0001</div>
-        <div><span style='background-color: #FED976'></span>0.01</div>
+        <div><span style='background-color: #FED976'></span>1E-16</div>
         <div><span style='background-color: #FEB24C'></span>0.1</div>
         <div><span style='background-color: #FD8D3C'></span>1.0</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
         <div><span style='background-color: #FC4E2A'></span>5.0</div>
         <div><span style='background-color: #E31A1C'></span>30</div>
-        <div><span style='background-color: #BD0026'></span>100</div>
+        <div><span style='background-color: #BD0026'></span>1E-9</div>
         <div><span style='background-color: #800026'></span>100+</div>
         <!--<div><span style='background-color: #7c27c2'></span>tba</div>
             <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
@@ -729,17 +744,18 @@ function styleZwedcPolys(attribute) {
       ['linear'],
       ['get', attribute],
 
+        //xref: adjoinScale
 		// Tyler's framework used 10 entries here ; changed to Ling's scale 
-                0.0, '#f2f3f4', // Anti-flash white, so it blend into bg // '#FFEDA0',  // '#F2F12D',  <--last one is from county choropleth
-                0.01, '#FED976',         // '#EED322',
-                0.1, '#FEB24C',         // '#E6B71E',
-                1.0, '#FD8D3C',         // '#DA9C20',
-                5.0, '#FC4E2A',         // '#CA8323',
-                30 , '#E31A1C',         // '#B86B25',
-                100, '#BD0026',         // '#A25626',
-              10000, '#800026'          // #8B4225',
-           //    20,  '#7c27c2', // light purple  // few ZWEDC values this high
-           //    25,  '#5b08a3'  // dark  purple  // '#723122'
+        1e-16, '#f2f3f4', // Anti-flash white, so it blend into bg // '#FFEDA0',  // '#F2F12D',  <--last one is from county choropleth
+        1e-15, '#FED976',         // '#EED322',
+        1e-14, '#FEB24C',         // '#E6B71E',
+        1e-13, '#FD8D3C',         // '#DA9C20',
+        1e-12, '#FC4E2A',         // '#CA8323',
+        1e-11, '#E31A1C',         // '#B86B25',
+        1e-10, '#BD0026',         // '#A25626',
+        1e-9,  '#800026'          // #8B4225',
+        //    20,  '#7c27c2', // light purple  // few ZWEDC values this high
+        //    25,  '#5b08a3'  // dark  purple  // '#723122'
     ]
 };
 
@@ -750,7 +766,7 @@ function styleZwedcOpacity(attribute) {
       ['linear'],
       ['get', attribute],
 		// Tyler's framework used 10 entries here 
-                0.0, 0.05,              // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
+                0.0, 0.05,    // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
                0.01, 0.15,
                 1.0, 0.25,
                 5.0, 0.40,
@@ -998,7 +1014,7 @@ map.on('load', function () {
             url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair
             //url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' // 2020.0119 tin117
         },
-        "source-layer": "contour",
+        "source-layer": "contour",   // this still shows countour lines in adjoin, but hiden at certain zoom level
         "layout": {
             "line-join": "round",
             "line-cap": "round"
@@ -1085,15 +1101,17 @@ map.on('mousemove', function (e) {
 	      //['caair'] 
       });
       if (features.length > 0) {
-           ouVal = features[0].properties.max   ;
+           ouVal = features[0].properties.value   ;   // adjoin O3, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
+           //ouVal = features[0].properties.max   ;   // odor
            if( ouVal < 0.01 ) {
                 ouValString = ouVal.toExponential(1) ;
            } else {
                 ouValString = ouVal.toPrecision(2);
            }
            text2display =  
-		      "<H3>Ozone measurement (mockup only³):</H3>\n" + 
-		      "" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"  
+		      "<H3>Ozone change(ppb):</H3>\n" + 
+		      "" + features[0].properties.max.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
+		      //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
 		      //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
 		      //"" + ouValString 	+ "<BR>\n"  
       } else {
