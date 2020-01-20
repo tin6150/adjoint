@@ -305,18 +305,15 @@ mapbox
 			<!-- hour mixing, same name as before -->
             <select id="hourSelectorUI"> <!--mixing depends on time of day-->
                 <option value="NA" disabled >Mixing Hours</option>	       
-                <option value="Al">All hours</option>
-                <option value="Hi">High mixing</option>  
-                <option value="Lo" selected='selected'>Low  mixing</option>
+                <option value="Al" selected='selected'>All hours</option>
+                <option value="Hi"                    >High mixing</option>  
+                <option value="Lo"                    >Low  mixing</option>
             </select>
 
-			<!-- scale no longer needed.  But EV vs AV vs TNC ? -->
-			<!-- but needed to get old data for now 
+			<!-- scale no longer needed.  But EV vs AV vs TNC is for diff proj 
 			<select id="scaleSelectorUI">
-                <option value="NA"  disabled >Scale/Scenario</option>	       
-                <option value="10x" selected='selected' >EV</option>
-                <option value="110">AV</option>
-                <option value="110">TNC</option>
+                <option value="NA"  disabled ></option>	       
+                <option value="10x" selected='selected' ></option>
             </select>
 			-->
 
@@ -560,6 +557,8 @@ var calculatorMode = "distance";  // "rate" is the other calculator
 // actually no need to store this.  HTML DOM automatically store unless page reloaded
 //var rateInput4distCalc = 5.0;   		  // in ou/s     
 //var distInput4rateCalc = 1000;		  // in m
+
+$("#scaleSelectorUI").hide();  // do not show the 100% scale selector.  remove hack when adjoin data is finally adopted and not just showing odor data ++FIXEM 2020.0118
 
 $("#ShowCalculator").click( function() {
 	console.log("#ShowCalculator was clicked" );
