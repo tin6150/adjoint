@@ -177,8 +177,8 @@ mapbox tin117
     .map-overlay-features {
         visibility: visible; /* hidden */
         position: absolute;
-        height: 160px;      /* smelly 240px */
-        width:  300px;      /* formerly 328px, 220px, 300px - needed more space cuz longer title now */
+        height: 120px;      /* smelly 240px */
+        width:  260px;      /* formerly 328px, 220px, 300px - needed more space cuz longer title now */
         margin-top: 10px;
         margin-bottom: 22px;
         margin-left:  10px; 
@@ -500,12 +500,12 @@ mapbox tin117
         <!--3³-->
         Ozone change (ppb): 
         <div><span style='background-color: #f2f3f4'></span>0.0001</div>
-        <div><span style='background-color: #FED976'></span>1E-16</div>
+        <div><span style='background-color: #FED976'></span>1e-16</div>
         <div><span style='background-color: #FEB24C'></span>0.1</div>
         <div><span style='background-color: #FD8D3C'></span>1.0</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
         <div><span style='background-color: #FC4E2A'></span>5.0</div>
         <div><span style='background-color: #E31A1C'></span>30</div>
-        <div><span style='background-color: #BD0026'></span>1E-9</div>
+        <div><span style='background-color: #BD0026'></span>1e-9</div>
         <div><span style='background-color: #800026'></span>100+</div>
         <!--<div><span style='background-color: #7c27c2'></span>tba</div>
             <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
@@ -837,13 +837,13 @@ function getInputFormSelection() {
                     // see git log 1dff205 for older version that had 'table' and in-place code here for fill-color and fill-opacity
                     'fill-color': styleScaleLegendPolys('max'),
                     //'fill-opacity': polyLayerOpacity,
-                    //'fill-opacity': 0.2
+                    //'fill-opacity': 0.6
                     'fill-opacity': styleScaleLegendOpacity('max') // max attribute just a place holder
             }
         });  // end map.addLayer(...) for zwedc/caair        
         document.getElementById('featuresDbg').innerHTML = "map.addLayer status:"  + addStatus + "--EndStatus--";  // dont give any info, always just 'Object object'
         feedback.innerHTML = inputFormSelection; // + " - layerAdded";
-        console.log( "--dbg-- getInputFormSelection() :: layerAdded:" + inputFormSelection );
+        console.log( "--dbg-- getInputFormSelection() :: done addLayer:" + inputFormSelection );
         this.className = 'active';   // from mapbox layer eg... not sure what it does :(
         
         // above to load layer and draw
@@ -1061,6 +1061,7 @@ map.on('mousemove', function (e) {
       // this next one not limited to any layer -- ie query all layers
       // and provide debug info for all fetures
       var featuresSiteInfo = map.queryRenderedFeatures(e.point);
+      // odor had layer with site specific info.  adjoin may want a census layer to get population data (but has to calculate density which is not trivial).
       //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-pt-ctr'] });    
       //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-polyg'] });     // layer name in the style used by smelly
       //var featuresSiteInfo = {}
@@ -1072,12 +1073,11 @@ map.on('mousemove', function (e) {
 		      /// + "Facility: "    + featuresSiteInfo[0].properties.facility     + "<BR>\n"  
 		      //~ +"Pop Density: " + featuresSiteInfo[0].properties.pop_density.toPrecision(3)  + "<BR>\n"  
 		      + "Pop Density: " + popDen2display + " person/mile²<BR>\n"     //maybe get from a census layer...
-		      + "Terrain: "     + featuresSiteInfo[0].properties.terrain      + "<BR>\n"  
+		      /// + "Terrain: "     + featuresSiteInfo[0].properties.terrain      + "<BR>\n"  
       } 
 
       //text2display += " --TheEnd";
       document.getElementById('features').innerHTML = text2display;
-      //## tinWasHere
 
 });
 
