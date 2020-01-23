@@ -727,14 +727,15 @@ function styleScaleLegendPolys(attribute) {
 
         //xref: adjoinScale
 		// Tyler's framework used 10 entries here ; changed to Ling's scale 
-        1e-16, '#f2f3f4', // Anti-flash white, so it blend into bg // '#FFEDA0',  // '#F2F12D',  <--last one is from county choropleth
-        1e-15, '#FED976',         // '#EED322',
-        1e-14, '#FEB24C',         // '#E6B71E',
-        1e-13, '#FD8D3C',         // '#DA9C20',
-        1e-12, '#FC4E2A',         // '#CA8323',
-        1e-11, '#E31A1C',         // '#B86B25',
+///        1e-16, '#f2f3f4', // Anti-flash white, so it blend into bg // '#FFEDA0',  // '#F2F12D',  <--last one is from county choropleth
+///        1e-15, '#FED976',         // '#EED322',
+///        1e-14, '#FEB24C',         // '#E6B71E',
+///        1e-13, '#FD8D3C',         // '#DA9C20',
+///        1e-12, '#FC4E2A',         // '#CA8323',
+///        1e-11, '#E31A1C',         // '#B86B25',
         1e-10, '#BD0026',         // '#A25626',
-        1e-9,  '#800026'          // #8B4225',
+        1,  '#800026'          // #8B4225',
+        ///1e-9,  '#800026'          // #8B4225',
         //    20,  '#7c27c2', // light purple  // few ZWEDC values this high
         //    25,  '#5b08a3'  // dark  purple  // '#723122'
     ]
@@ -747,13 +748,13 @@ function styleScaleLegendOpacity(attribute) {
       ['linear'],
       ['get', attribute],
 		// Tyler's framework used 10 entries here 
-                0.0, 0.05,    // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
-               0.01, 0.15,
-                1.0, 0.25,
-                5.0, 0.40,
-                 30, 0.55,
-                100, 0.70,
-               1000, 0.85,
+///                0.0, 0.05,    // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
+///               0.01, 0.15,
+///                1.0, 0.25,
+///                5.0, 0.40,
+///                 30, 0.55,
+///                100, 0.70,
+               0.001, 0.85, //1000, 0.85,
              100000, 0.95
     ]
 };
@@ -936,8 +937,9 @@ map.on('load', function () {
         "type": "line",
         "source": {
             type: 'vector',
-            //url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair
-            url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' // 2020.0119 tin117
+            url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair   // hey, even this work with adjoin and saw a few data spots now.  are value too low for mapbox to considere there is data in it??
+            //url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' 	// "basic", mostly whitish look and feel.  2020.0119 tin117
+			//url: ' mapbox://styles/tin117/ck5qcij6k2h4d1imujklluc69' 	// basic+data, red, scaled partially... 2020.0122
         },
         "source-layer": "contour",   // this still shows countour lines in adjoin, but hiden at certain zoom level
         "layout": {
