@@ -82,7 +82,7 @@ mapbox tin117
 	.noNewLine {
 		display:inline;
 	}
-	/* trying to format the now customized attribution feature, but don't seems to get it to work  */
+	/* trying to format the now customized attribution feature, but dont seems to get it to work  */
 	#attribution-layer {
        	    margin-left: 1000px;	
             background: rgba(30, 30, 30, 0.6);  /* this should be dark to black...  255 255 255 is pure white */
@@ -238,7 +238,7 @@ mapbox tin117
 
 <body>
 
-<!-- Tyler had a navbar at top, having some menu, just trying to be closer to his model, i don't plan to have anything here  -->
+<!-- Tyler had a navbar at top, having some menu, just trying to be closer to his model, i dont plan to have anything here  -->
 <!-- Hmm this does not appear -->
 <div id='navbar'>
 </div>
@@ -675,7 +675,7 @@ var map = new mapboxgl.Map({
     //style: 'mapbox://styles/mapbox/light-v9',
     //style: 'mapbox://styles/mapbox/dark-v9',		// alt basemap style
     //style: 'mapbox://styles/sn50/cjq8j89hqavyu2sqs3kctxqjj', 	// cali terrain, probably just the base layer map from mapbox.  used in early caair_zwedc
-    //style: 'mapbox://styles/sn50/cjrd1zmyy1kds2tp6k4az7apr',    // sites_info_polyg  with satellite street as base layer, too many colors, don't show data well.
+    //style: 'mapbox://styles/sn50/cjrd1zmyy1kds2tp6k4az7apr',    // sites_info_polyg  with satellite street as base layer, too many colors, dont show data well.
     // #### wtf? mapboxstyles change here!
     //style: 'mapbox://styles/sn50/cjreie0fs4o0m2sqghg3ukiqn', 	// sites_info_pt_ctr with cali terrain     as base layer .  pt in center is pretty small, no need for TopLeft position.
     //style: 'mapbox://styles/sn50/cjrekq65d4o7o2slw5x262rb0',	// sites_info_polyg  + sites_info_pt_topLeft  with cali terrain.  corner point turns out to be bottom left, but whatever. 
@@ -713,7 +713,7 @@ var map = new mapboxgl.Map({
 //-color gradient from choropleth tutorial  https://www.mapbox.com/help/choropleth-studio-gl-pt-2/
 //-var layers = ['0-10', '10-20', '20-50', '50-100', '100-200', '200-500', '500-1000', '1000+'];
 //-var colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
-// don't think these below are used anymore
+// dont think these below are used anymore
 //var zwedc_layers = ['0-0.01', '0.01-0.1', '0.1-1.0', '1.0-3.0', '3.0-5.0', '5.0-8.0', '8.0-10', '10-15',    '15+'];	// Tyler legend needed by markers
 //var zwedc_colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026', '#000000']; // Tyler legend needed by markers 
 
@@ -740,7 +740,7 @@ function styleScaleLegendPolys(attribute) {
     ]
 };
 
-// the attribute, 'max', don't do anything here
+// the attribute, 'max', dont do anything here
 function styleScaleLegendOpacity(attribute) {
     return [
       'interpolate',
@@ -775,7 +775,7 @@ function getInputFormSelection() {
         if( currentLoadedMapLayer != "" ) {
             console.log( "--dbg-- getInputFormSelection() :: IF, at currentLoadedMapLayer not empty " );
             // https://docs.mapbox.com/mapbox.js/example/v1.0.0/layers/
-            //if (map.hasLayer('caair')) {     // err not a fn.  so can't call map.fn here? 
+            //if (map.hasLayer('caair')) {     // err not a fn.  so cant call map.fn here? 
             //    map.removeLayer('caair');
             //    this.className = '';
             //} 
@@ -799,7 +799,7 @@ function getInputFormSelection() {
         console.log( currentLoadedMapLayer );
         console.log( "--dbg-- getInputFormSelection() :: currentLoadedMapSource:" );
         console.log( currentLoadedMapSource );
-        addStatus = map.addLayer({
+        noUseObjHandle = map.addLayer({
             id: currentLoadedMapLayer, //--id: 'caair',
             type: 'fill',
             layout: {
@@ -807,7 +807,9 @@ function getInputFormSelection() {
                 //visibility: zwedcPolyVis
                 //visibility: 'none'		// can use this to make ZWEDC data disapear ##
             },     
-            // sn50.SfZwedcAllHiBi10x need to be in url and source-layer, w/ username in url, NO username in source-layer.  be careful!!
+			// around here should be groundzero of adjoin data layer not displaying... ++FIXME 
+            // sn50.SfZwedcAllHiBi10x need to be in url and source-layer, w/ username in url, NO username in source-layer.  be careful!!    ++2020.0122
+		    // code seems fine, tile is loaded... maybe coloring problem?
             source: {
                 type: 'vector',
                 //url: 'mapbox://sn50.aae3dmkj'   // ZWEDC 25x25 sq first test data set (at 10x?)
@@ -817,7 +819,7 @@ function getInputFormSelection() {
             },
             //'source-layer': 'ZWEDC_50x50m-29q7xv',	// retrieved from mapbox web site Tile management...  [1st dummy test data]
             //'source-layer': 'SfZwedcSprHiBi10x',	// no username prefix here!! duh!!
-            'source-layer': inputFormSelection,	    //  grab source layer name from parsed input form 
+            'source-layer': inputFormSelection,	    //  grab source layer name from parsed input form   // NO username here
             paint: {
                     'fill-antialias': false,    // remove gridline
                     //'fill-color': 'rgba(61,153,80,0.55)',                    // https://www.mapbox.com/help/how-web-apps-work/#use-mapbox-gl-js-with-react ##
@@ -828,16 +830,17 @@ function getInputFormSelection() {
                     'fill-opacity': styleScaleLegendOpacity('max') // max attribute just a place holder
             }
         });  // end map.addLayer(...) for zwedc/caair        
-        document.getElementById('featuresDbg').innerHTML = "map.addLayer status:"  + addStatus + "--EndStatus--";  // dont give any info, always just 'Object object'
+        document.getElementById('featuresDbg').innerHTML = "map.addLayer result:"  + noUseObjHandle + "--End--";  // noUseObjHandle dont give any info, always just 'Object object', it is not a return code indicating success or failure.  but browswer console network show tile loaded ok
         feedback.innerHTML = inputFormSelection; // + " - layerAdded";
         console.log( "--dbg-- getInputFormSelection() :: done addLayer:" + inputFormSelection );
+        console.log( "--dbg-- map.addLayer " + inputFormSelection + " result:"  + noUseObjHandle + "--End--" );
         this.className = 'active';   // from mapbox layer eg... not sure what it does :(
         
         // above to load layer and draw
         // depending on combination, unload and load new layer data, then update map.  no need to do new map
         
         // below for flyTo specific site, if it has changed
-        currentLoadedMapSource = inputFormSelection;       // can't use "this." just remember this is "global var"
+        currentLoadedMapSource = inputFormSelection;       // cant use "this." just remember this is "global var"
         //currentSite = document.getElementById("siteSelectorUI").value;
         currentSite = "SjFresno"; // adjoin dont really need this, but on-load FlyTo let it center near Fresno
         console.log( "currentSite  (make sure it is defined):"  );
@@ -850,7 +853,7 @@ function getInputFormSelection() {
         console.log( "prepping to fly to lon/lat:"  );
         console.log( flyToLoc  );
         if( prevSite != currentSite )  {   
-            //-var pan2loc = {lon: -121.98, lat: 37.66};  // Dublin, but don't work. need more param.
+            //-var pan2loc = {lon: -121.98, lat: 37.66};  // Dublin, but dont work. need more param.
             //-map.panTo(pan2loc);   // need more param that i am not sure how to create yet  ... hmmm it is panTo(), though still take 3 params.
             //~map.flyTo({center: [-121.98, 37.66]});   // https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto   // this works
             console.log( " site change eval to true, about to execute fly"  );
@@ -869,7 +872,7 @@ function getInputFormSelection() {
 // store parallel hash of lon/lat of sites.   eg lon['sfzwedc'] lat['sfzwedc'] for use with flyTo()/panTo
 function buildLonLatHash() {
     console.log( '--dbg-- buildLonLatHash begin' );
-    dbgTracer += " buildLonLatHash() \t";     // can't use "this." prefix to seek what I thought was object-wide var.  really just think of it as global then.
+    dbgTracer += " buildLonLatHash() \t";     // cant use "this." prefix to seek what I thought was object-wide var.  really just think of it as global then.
     console.log( dbgTracer );
     // this version has hard coded siteName/lon/lat
     // snipplet of code generated via external script parsing the csv source
@@ -933,8 +936,8 @@ map.on('load', function () {
         "type": "line",
         "source": {
             type: 'vector',
-            url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair
-            //url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' // 2020.0119 tin117
+            //url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair
+            url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' // 2020.0119 tin117
         },
         "source-layer": "contour",   // this still shows countour lines in adjoin, but hiden at certain zoom level
         "layout": {
@@ -949,16 +952,16 @@ map.on('load', function () {
     });  // end map.addLayer(...)
     console.log("--dbg-- at map.on('load'...) completed addLayer for countour" );
 
-    //~ diff between "this.", "window." and just plain variable names.  in summary, don't use "this." to refer to "global", in browser need to use "window." or no prefix for the namespace
+    //~ diff between "this.", "window." and just plain variable names.  in summary, dont use "this." to refer to "global", in browser need to use "window." or no prefix for the namespace
     //~this.dbgTracer += " -this- aftAddLayerSite_info_pt \t";
     //~console.log(this.dbgTracer);
-    //~dbgTracer += " -plain- aftAddLayerSite_info_pt \t";     // can't use "this." prefix to seek what I thought was object-wide var.  really just think of it as global then.
+    //~dbgTracer += " -plain- aftAddLayerSite_info_pt \t";     // cant use "this." prefix to seek what I thought was object-wide var.  really just think of it as global then.
     //~console.log(dbgTracer);
     //~window.dbgTracer += " -window- aftAddLayerSite_info_pt \t";     // window. is the (optional) special keyword to access global var, usable in browser (but not in server-side code like Node.js).
     //~console.log(window.dbgTracer);
     
     //------------- tried to change attribution, but not too sucessful  ------------ 
-    //   below isn't all that important.
+    //   below isnt all that important.
     map.addLayer({
         "id": "attribution-layer",
         "type": "circle",
@@ -1090,7 +1093,7 @@ var scale = new mapboxgl.ScaleControl({
 map.addControl(scale);
 //scale.setUnit('metric');
 
-// https://www.mapbox.com/mapbox-gl-js/api/#keyboardhandler#enable  but don't seems to do anything in chrome :(
+// https://www.mapbox.com/mapbox-gl-js/api/#keyboardhandler#enable  but dont seems to do anything in chrome :(
 map.keyboard.enable();
 
 
@@ -1111,7 +1114,7 @@ map.keyboard.enable();
 
 // things are event-based, multi-threaded.
 // thus, this section is loaded before many of the above map.on('load'...) etc are loaded.
-// so the lon/lat hash can't be build until the addLayer returns.
+// so the lon/lat hash cant be build until the addLayer returns.
 // Solution: have another fn that builds the hash
 // and invoke it from map.on('load'...)
 // Therefore, there is no real work in "main" section here.
