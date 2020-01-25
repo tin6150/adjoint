@@ -195,7 +195,7 @@ mapbox tin117
 	
     /* debug info box to display tileset features info - top right - hidden when not in use   // no useful data for adjoin? */
     .map-overlay-features-dbg {
-        visibility: visible; /* ++2020.0119 DBG++ hidden; /* visible */
+        visibility: hidden; /* ++2020.0119 DBG++ hidden; /* visible */
         position: absolute;
         top: 0;
         margin-top: 70px; /*40px;    /* so that it appears below the drop down selectors.  40px for single line of names, 70px for 2 lines */
@@ -499,14 +499,14 @@ mapbox tin117
     <div id='legend' class='legend' >
         <!--3³-->
         Ozone change (ppb): 
-        <div><span style='background-color: #f2f3f4'></span>0.0001</div>
-        <div><span style='background-color: #FED976'></span>1e-16</div>
-        <div><span style='background-color: #FEB24C'></span>0.1</div>
-        <div><span style='background-color: #FD8D3C'></span>1.0</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
-        <div><span style='background-color: #FC4E2A'></span>5.0</div>
-        <div><span style='background-color: #E31A1C'></span>30</div>
-        <div><span style='background-color: #BD0026'></span>1e-9</div>
-        <div><span style='background-color: #800026'></span>100+</div>
+        <div><span style='background-color: #f2f3f4'></span>1e-16</div>
+        <div><span style='background-color: #FED976'></span>1e-14</div>
+        <div><span style='background-color: #FEB24C'></span>1e-12</div>
+        <div><span style='background-color: #FD8D3C'></span>1e-10</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
+        <div><span style='background-color: #FC4E2A'></span>1e-8</div>
+        <div><span style='background-color: #E31A1C'></span>1e-6</div>
+        <div><span style='background-color: #BD0026'></span>1e-4</div>
+        <div><span style='background-color: #800026'></span>1e-2+</div>
         <!--<div><span style='background-color: #7c27c2'></span>tba</div>
             <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
     </div>
@@ -718,7 +718,7 @@ var map = new mapboxgl.Map({
 //var zwedc_layers = ['0-0.01', '0.01-0.1', '0.1-1.0', '1.0-3.0', '3.0-5.0', '5.0-8.0', '8.0-10', '10-15',    '15+'];	// Tyler legend needed by markers
 //var zwedc_colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026', '#000000']; // Tyler legend needed by markers 
 
-
+// adjoinScale
 // modeleed after styleCountyPolys(poly_data_field) 
 function styleScaleLegendPolys(attribute) {
     return [
@@ -752,13 +752,13 @@ function styleScaleLegendOpacity(attribute) {
       ['get', attribute],
       // Tyler framework used 10 entries here .  adjoin need to reverse color and opacity scale as val closest to zero is most impactful (since range 1e-4 to 1e-14). 
         1e-16, 0.05,
-        1e-14, 0.15,
-        1e-12, 0.25,
-        1e-10, 0.40,
-        1e-08, 0.55,
-        1e-06, 0.70,
-        1e-04, 0.85,
-        1e-02, 0.95
+        1e-14, 0.10, //0.15,
+        1e-12, 0.15, //0.25,
+        1e-10, 0.20, //0.40,
+        1e-08, 0.25, //0.55,
+        1e-06, 0.40, //0.70,
+        1e-04, 0.60, //0.85,
+        1e-02, 0.80, //0.95
 ///                0.0, 0.05,    // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
 ///               0.01, 0.15,
 ///                1.0, 0.25,
@@ -948,8 +948,8 @@ map.on('load', function () {
         "type": "line",
         "source": {
             type: 'vector',
-            url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair   // hey, even this work with adjoin and saw a few data spots now.  are value too low for mapbox to considere there is data in it??
-            //url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' 	// "basic", mostly whitish look and feel.  2020.0119 tin117
+            //url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair   // hey, even this work with adjoin and saw a few data spots now.  are value too low for mapbox to considere there is data in it??
+            url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' 	// "basic", mostly whitish look and feel.  2020.0119 tin117
 			//url: ' mapbox://styles/tin117/ck5qcij6k2h4d1imujklluc69' 	// basic+data, red, scaled partially... 2020.0122
         },
         "source-layer": "contour",   // this still shows countour lines in adjoin, but hiden at certain zoom level
