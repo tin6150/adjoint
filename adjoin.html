@@ -679,7 +679,8 @@ var map = new mapboxgl.Map({
     // #### wtf? mapboxstyles change here!
     //style: 'mapbox://styles/sn50/cjreie0fs4o0m2sqghg3ukiqn', 	// sites_info_pt_ctr with cali terrain     as base layer .  pt in center is pretty small, no need for TopLeft position.
     //style: 'mapbox://styles/sn50/cjrekq65d4o7o2slw5x262rb0',	// sites_info_polyg  + sites_info_pt_topLeft  with cali terrain.  corner point turns out to be bottom left, but whatever. 
-    style: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6', // 2020.0119 tin117 Basic (light)
+    //style: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6', // 2020.0119 tin117 Basic (light)
+    style: 'mapbox://styles/tin117/ck5un3c7t00wy1in3rn7v33ak',   // tin117: outdoor-NoLandUse (and off hill shades, to make it very uniform light background)  
 
     
    
@@ -811,6 +812,28 @@ function getInputFormSelection() {
         console.log( currentLoadedMapLayer );
         console.log( "--dbg-- getInputFormSelection() :: currentLoadedMapSource:" );
         console.log( currentLoadedMapSource );
+        //-- add a polygon outlining the receptor region --//
+        //-- eg tin117.receptor-polygon-DAC-topo3 --//
+        //++ may need to add remove layer code if more than one receptor in future ++TODO adjoin
+        map.addLayer({
+            id: "receptor-polygon-DAC-topo3", 
+            type: "line",
+            source: { 
+                type: 'vector',
+                url: 'mapbox://tin117.receptor-polygon-DAC-topo3'   //++ dynamic name may be needed in future
+            },
+            "source-layer": "receptor-polygon-DAC-topo3",  
+            "layout": {
+                "line-join": "round",
+                "line-cap": "round"
+            },
+            "paint": {
+                "line-color": "#263aad", // blue  "#ff69b4", // red
+                "line-opacity": 0.8,
+                "line-width": 2 //1
+            }
+        }); // end map.addLayer(...) for receptor polygon
+        //-- add ozone data that is colored per gradient --//
         noUseObjHandle = map.addLayer({
             id: currentLoadedMapLayer, //--id: 'caair',
             type: 'fill',
@@ -948,9 +971,10 @@ map.on('load', function () {
         "type": "line",
         "source": {
             type: 'vector',
-            //url: 'mapbox://mapbox.mapbox-terrain-v2'  // used in sn50 caair   // hey, even this work with adjoin and saw a few data spots now.  are value too low for mapbox to considere there is data in it??
-            url: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6' 	// "basic", mostly whitish look and feel.  2020.0119 tin117
-			//url: ' mapbox://styles/tin117/ck5qcij6k2h4d1imujklluc69' 	// basic+data, red, scaled partially... 2020.0122
+            url: 'mapbox://mapbox.mapbox-terrain-v2'  // this loads a layer with countour lines, visible at zoom 9 and above.  (smelly and adjoin)
+            // style published from studio loaded here dont matter, below is where i tested and did not work.  style set in another section
+            //url: 'mapbox://styles/tin117/ck5un3c7t00wy1in3rn7v33ak'     // tin117: outdoor-NoLandUse 
+
         },
         "source-layer": "contour",   // this still shows countour lines in adjoin, but hiden at certain zoom level
         "layout": {
@@ -964,7 +988,10 @@ map.on('load', function () {
         }
     });  // end map.addLayer(...)
     console.log("--dbg-- at map.on('load'...) completed addLayer for countour" );
-
+    ///map.addLayer({
+        /// tin117.receptor-polygon-DAC-topo3
+    ///});  // end map.addLayer(...)
+    console.log("--dbg-- at map.on('load'...) completed addLayer for DAC-topo3 receptor polygon" );
     //~ diff between "this.", "window." and just plain variable names.  in summary, dont use "this." to refer to "global", in browser need to use "window." or no prefix for the namespace
     //~this.dbgTracer += " -this- aftAddLayerSite_info_pt \t";
     //~console.log(this.dbgTracer);
