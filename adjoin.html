@@ -505,9 +505,9 @@ mapbox tin117
         <div><span style='background-color: #FEd976'></span>1.0e-5</div>   
         <div><span style='background-color: #FD8D3C'></span>1.5e-5</div>    
         <div><span style='background-color: #FC4E2A'></span>2.0e-5</div>
-        <div><span style='background-color: #E31A1C'></span>7.0e-5</div>
-        <div><span style='background-color: #BD0026'></span>1.5e-4</div>
-        <div><span style='background-color: #800026'></span>1.8e-4 and above </div>
+        <div><span style='background-color: #E31A1C'></span>4.0e-5</div>
+        <div><span style='background-color: #BD0026'></span>8.0e-5</div>
+        <div><span style='background-color: #800026'></span>1.0e-4 and above </div>
         <!--<div><span style='background-color: #7c27c2'></span>tba</div>
             <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
     </div>
@@ -737,9 +737,9 @@ function styleScaleLegendPolys(attribute) {
         1.0e-5, '#FED976', // yellow 
         1.5e-5, '#FD8D3C', // orange  
         2.0e-5, '#FC4E2A', // red/orange 
-        7.0e-5, '#E31A1C', // very red   
-        1.0e-4, '#BD0026',         
-        1.7e-4, '#800026'  // dark red 
+        4.0e-5, '#E31A1C', // very red   
+        8.0e-5, '#BD0026',         
+        1.0e-4, '#800026'  // dark red 
     ]
 };
 
@@ -751,13 +751,13 @@ function styleScaleLegendOpacity(attribute) {
       ['get', attribute],
       // Tyler framework used 10 entries here .  adjoin need to reverse color and opacity scale as val closest to zero is most impactful (since range 1e-4 to 1e-14). 
         1.0e-6,  0.1,
-        5.0e-6,  0.2, //0.15,
-        1.0e-5,  0.3, //0.25,
-        1.5e-5,  0.40, //0.40,
-        2.0e-5,  0.50, //0.55,
-        7.0e-5,  0.60, //0.70,
-        1.5e-4,  0.70, //0.85,
-        1.8e-4,  0.80  //0.95
+        5.0e-6,  0.2, 
+        1.0e-5,  0.3, 
+        1.5e-5,  0.40, 
+        2.0e-5,  0.50, 
+        4.0e-5,  0.60, 
+        8.0e-5,  0.70, 
+        1.0e-4,  0.80  
         // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
     ]
 };
