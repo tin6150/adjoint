@@ -497,16 +497,16 @@ mapbox tin117
     xref: adjoinScale
     -->
     <div id='legend' class='legend' >
-        <!--3³-->
+        <!--3³  2020.0206-->
         Ozone change (ppb): 
-        <div><span style='background-color: #f2f3f4'></span>1e-16</div>
-        <div><span style='background-color: #FED976'></span>1e-14</div>
-        <div><span style='background-color: #FEB24C'></span>1e-12</div>
-        <div><span style='background-color: #FD8D3C'></span>1e-10</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
-        <div><span style='background-color: #FC4E2A'></span>1e-8</div>
-        <div><span style='background-color: #E31A1C'></span>1e-6</div>
-        <div><span style='background-color: #BD0026'></span>1e-4</div>
-        <div><span style='background-color: #800026'></span>1e-2+</div>
+        <div><span style='background-color: #f2f3f4'></span>1e-9-</div>
+        <div><span style='background-color: #FED976'></span>1e-8</div>
+		<div><span style='background-color: #FEB24C'></span>1e-7</div>    <!-- 7...9 is focus -->
+        <div><span style='background-color: #FD8D3C'></span>1e-6</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
+        <div><span style='background-color: #FC4E2A'></span>5e-6</div>
+        <div><span style='background-color: #E31A1C'></span>1e-5</div>
+        <div><span style='background-color: #BD0026'></span>5e-5</div>
+        <div><span style='background-color: #800026'></span>1e-4+</div>
         <!--<div><span style='background-color: #7c27c2'></span>tba</div>
             <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
     </div>
@@ -729,14 +729,14 @@ function styleScaleLegendPolys(attribute) {
 
         //xref: adjoinScale
         // Tyler's framework used 10 entries here ; changed to Ling's scale 
-        1e-16, '#f2f3f4',
-        1e-14, '#FED976',         // '#EED322',
-        1e-12, '#FEB24C',         // '#E6B71E',
-        1e-10, '#FD8D3C',         // '#DA9C20',
-        1e-08, '#FC4E2A',         // '#CA8323',
-        1e-06, '#E31A1C',         // '#B86B25',
-        1e-04, '#BD0026',         // '#A25626',
-        1e-02, '#800026'          // '#A25626',
+        1e-9, '#f2f3f4',
+        1e-8, '#FED976',         // '#EED322',
+        1e-7, '#FEB24C',         // '#E6B71E',
+        1e-6, '#FD8D3C',         // '#DA9C20',
+        5e-6, '#FC4E2A',         // '#CA8323',
+        1e-5, '#E31A1C',         // '#B86B25',
+        5e-5, '#BD0026',         // '#A25626',
+        1e-4, '#800026'          // '#A25626',
 
         //1,   '#800026'          // #8B4225',
         ///1e-9,  '#800026'          // #8B4225',
