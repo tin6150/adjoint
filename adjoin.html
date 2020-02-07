@@ -498,22 +498,24 @@ mapbox tin117
     -->
     <div id='legend' class='legend' >
         <!--3³  2020.0206-->
-        Ozone change (ppb): 
-        <div><span style='background-color: #f2f3f4'></span>1e-9-</div>
-        <div><span style='background-color: #FED976'></span>1e-8</div>
-		<div><span style='background-color: #FEB24C'></span>1e-7</div>    <!-- 7...9 is focus -->
-        <div><span style='background-color: #FD8D3C'></span>1e-6</div>    <!-- was FD8D3C , thought about changing to FF9900, but not enough diff -->
-        <div><span style='background-color: #FC4E2A'></span>5e-6</div>
-        <div><span style='background-color: #E31A1C'></span>1e-5</div>
-        <div><span style='background-color: #BD0026'></span>5e-5</div>
-        <div><span style='background-color: #800026'></span>1e-4+</div>
+        Impact on Receptor  <BR>
+        ppb/(g/[h*km2])
+        <div><span style='background-color: #f2f3f4'></span>1.0e-6 and below</div>
+        <div><span style='background-color: #00d900'></span>5.0e-6</div>
+        <div><span style='background-color: #FEd976'></span>1.0e-5</div>   
+        <div><span style='background-color: #FD8D3C'></span>1.5e-5</div>    
+        <div><span style='background-color: #FC4E2A'></span>2.0e-5</div>
+        <div><span style='background-color: #E31A1C'></span>7.0e-5</div>
+        <div><span style='background-color: #BD0026'></span>1.5e-4</div>
+        <div><span style='background-color: #800026'></span>1.8e-4 and above </div>
         <!--<div><span style='background-color: #7c27c2'></span>tba</div>
             <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
     </div>
 
     <!-- this create the bottom right info box -->
     <div class='map-overlay-features' id='features'>
-            <h3>Ozone Measurement (unit tbd³):</h3> <!-- this is title of bottom right box -->
+            <!-- this is title of bottom right box -->
+            <H3>Impact on Receptor, in ppb/(g/[h*km2]) :</H3> 
             <div id='pd'><p>(Hover over data point)</p></div>   <!-- static text, replaced later by JS -->
     </div>
 
@@ -727,21 +729,17 @@ function styleScaleLegendPolys(attribute) {
       ['linear'],
       ['get', attribute],
 
-        //xref: adjoinScale
+        // xref: adjoinScale 2020.0206 check in #3
         // Tyler's framework used 10 entries here ; changed to Ling's scale 
-        1e-9, '#f2f3f4',
-        1e-8, '#FED976',         // '#EED322',
-        1e-7, '#FEB24C',         // '#E6B71E',
-        1e-6, '#FD8D3C',         // '#DA9C20',
-        5e-6, '#FC4E2A',         // '#CA8323',
-        1e-5, '#E31A1C',         // '#B86B25',
-        5e-5, '#BD0026',         // '#A25626',
-        1e-4, '#800026'          // '#A25626',
-
-        //1,   '#800026'          // #8B4225',
-        ///1e-9,  '#800026'          // #8B4225',
-        //    20,  '#7c27c2', // light purple  // few ZWEDC values this high
-        //    25,  '#5b08a3'  // dark  purple  // '#723122'
+        // color picker https://www.w3schools.com/colors/colors_picker.asp?colorhex=ADFF2F
+        1.0e-6, '#f2f3f4', // white
+        5.0e-6, '#00D900', // green      
+        1.0e-5, '#FED976', // yellow 
+        1.5e-5, '#FD8D3C', // orange  
+        2.0e-5, '#FC4E2A', // red/orange 
+        7.0e-5, '#E31A1C', // very red   
+        1.0e-4, '#BD0026',         
+        1.7e-4, '#800026'  // dark red 
     ]
 };
 
@@ -752,22 +750,15 @@ function styleScaleLegendOpacity(attribute) {
       ['linear'],
       ['get', attribute],
       // Tyler framework used 10 entries here .  adjoin need to reverse color and opacity scale as val closest to zero is most impactful (since range 1e-4 to 1e-14). 
-        1e-9,  0.05,
-        1e-8,  0.05, //0.15,
-        1e-7,  0.1, //0.25,
-        1e-6,  0.50, //0.40,
-        5e-6   0.50, //0.55,
-        1e-5,  0.70, //0.70,
-        5e-5,  0.70, //0.85,
-        1e-4,  0.70, //0.95
-///                0.0, 0.05,    // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
-///               0.01, 0.15,
-///                1.0, 0.25,
-///                5.0, 0.40,
-///                 30, 0.55,
-///                100, 0.70,
-///               0.001, 0.85, //1000, 0.85,
-///             100000, 0.95
+        1.0e-6,  0.1,
+        5.0e-6,  0.2, //0.15,
+        1.0e-5,  0.3, //0.25,
+        1.5e-5,  0.40, //0.40,
+        2.0e-5,  0.50, //0.55,
+        7.0e-5,  0.60, //0.70,
+        1.5e-4,  0.70, //0.85,
+        1.8e-4,  0.80  //0.95
+        // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
     ]
 };
 
@@ -1081,13 +1072,14 @@ map.on('mousemove', function (e) {
                 ouValString = ouVal.toPrecision(2);
            }
            text2display =  
-		      "<H3>Ozone change(ppb):</H3>\n" + 
+		      "<H3>Impact on Receptor \n ppb/(g/[h*km2]) :</H3>\n" +
 		      "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
 		      //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
 		      //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
 		      "" + ouValString 	+ "<BR>\n"  
       } else {
-            text2display = "<H3>Ozone change(ppb):</H3>\n" + "- <BR>\n" 
+            text2display = "<H3>Impact on Receptor \n ppb/(g/[h*km2]) :</H3>\n" + "- <BR>\n" 
+        (ppb/(g/h*km2))
             //UiSelection = $("site").val();
             //+ "UI: " + UiSelection ;
       }
@@ -1106,7 +1098,7 @@ map.on('mousemove', function (e) {
             text2display += "<BR>\n" 
 		      /// + "Facility: "    + featuresSiteInfo[0].properties.facility     + "<BR>\n"  
 		      //~ +"Pop Density: " + featuresSiteInfo[0].properties.pop_density.toPrecision(3)  + "<BR>\n"  
-		      + "Pop Density: " + popDen2display + " person/mile²<BR>\n"     //maybe get from a census layer...
+		      //~+ "Pop Density: " + popDen2display + " person/mile²<BR>\n"     //maybe get from a census layer...
 		      /// + "Terrain: "     + featuresSiteInfo[0].properties.terrain      + "<BR>\n"  
       } 
 
