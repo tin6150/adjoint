@@ -52,7 +52,7 @@ mapbox tin117
 	} 
 
 	/* from https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/ for population density legend */
-    /* scale bar in bottom left ? */
+    /* scale bar in bottom left (BL)? */
 	.legend {
 	    /*background-color: rgba(255,255,255,0.65);   /* #fff;*/
         background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
@@ -152,7 +152,7 @@ mapbox tin117
 	    background-color: rgba(250,224,224,0.65);   /* blue greenish? */
 	}
 
-	/* top box for user input */
+	/* top (TL) box for user input */
 	.inputCss {
 	    /*background-color: rgba(250,224,224,0.65);   /* blue greenish? */
 	    /*border-radius: 3px; */
@@ -173,12 +173,12 @@ mapbox tin117
 	    z-index: 5;		/* 1 appear behind copyright link; 5 would cover it. I have another (i) for the link :) */
 	}
 
-    /* 'meater reading box' :: feature info box in bottom right.  show value to user as mouse hoover an grid/polygon. */
+    /* 'meater reading box' :: feature info box in bottom right (BR).  show value to user as mouse hoover an grid/polygon. */
     .map-overlay-features {
         visibility: visible; /* hidden */
         position: absolute;
         height: 120px;      /* smelly 240px */
-        width:  260px;      /* formerly 328px, 220px, 300px - needed more space cuz longer title now */
+        width:  200px;      /* formerly 260px */
         margin-top: 10px;
         margin-bottom: 22px;
         margin-left:  10px; 
@@ -193,7 +193,7 @@ mapbox tin117
         border-radius: 3px;
     }
 	
-    /* debug info box to display tileset features info - top right - hidden when not in use   // no useful data for adjoin? */
+    /* debug info box to display tileset features info - top right (TR)- hidden when not in use */
     .map-overlay-features-dbg {
         visibility: hidden; /* ++2020.0119 DBG++ hidden; /* visible */
         position: absolute;
@@ -1074,13 +1074,13 @@ map.on('mousemove', function (e) {
                 ouValString = ouVal.toPrecision(2);
            }
            text2display =  
-		      "<H3>Impact on Receptor \n ppb/(g/[h*km2]) :</H3>\n" +
-		      "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
-		      //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
-		      //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
-		      "" + ouValString 	+ "<BR>\n"  
+               "<H3>Impact on Receptor <BR> \n ppb/(g/[h*km2]) :</H3>\n" +
+               "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
+               //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
+               //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
+               "" + ouValString 	+ "<BR>\n"  
       } else {
-            text2display = "<H3>Impact on Receptor \n ppb/(g/[h*km2]) :</H3>\n" + "- <BR>\n" 
+        text2display = "<H3>Impact on Receptor <BR>\n ppb/(g/[h*km2]) :</H3>\n" + "- <BR>\n" 
         (ppb/(g/h*km2))
             //UiSelection = $("site").val();
             //+ "UI: " + UiSelection ;
