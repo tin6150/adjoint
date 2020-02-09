@@ -276,6 +276,7 @@ mapbox tin117
             <select id="receptorSelectorUI"> <!-- site -->  <!--to emulate Tyler <select id="polygon-layer-selector"> -->
                 <option value="NA"        disabled           >Receptor </option>	       
                 <option value="DAC-topo3" selected="selected">DAC-topo3</option>	
+                <option value="TBD"       disabled           >TBD</option>	
             </select>
 
 			<!-- Meteorological Episode, formerly seasonSelectorUI -->
@@ -293,26 +294,26 @@ mapbox tin117
                 <option value="NA" disabled >Precursor</option>	       
                 <option value="NOx">NOx</option>
                 <option value="AVOC">AVOC</option>
-                <option value="AVOC-a-k">AVOC-A(k)</option>
-                <option value="OLE1">OLE1</option>
-                <option value="ARO1">ARO1</option>
-                <option value="ETHENE">Ethene</option>
-                <option value="OCHO">OCHO</option>
+                <option value="AVOC-a-k" disabled>AVOC-A(k)</option>
+                <option value="OLE1"     disabled>OLE1</option>
+                <option value="ARO1"     disabled>ARO1</option>
+                <option value="ETHENE"   disabled>Ethene</option>
+                <option value="OCHO"     disabled>OCHO</option>
            </select>
 
 		    <!-- Sensitivity Type (new) -->
             <select id="sensitivitySelectorUI">
                 <option value="NA" disabled >Sensitivity</option>	       
                 <option value="Sp">S+</option>
-                <option value="Sx">Sx</option>
+                <option value="Sx" disabled>Sx</option>
            </select>
 
 			<!-- hour mixing, same name as before -->
             <select id="hourSelectorUI"> <!--mixing depends on time of day-->
                 <option value="NA" disabled >Mixing Hours</option>	       
                 <option value="Al" selected='selected'>All hours</option>
-                <option value="Hi"                    >High mixing</option>  
-                <option value="Lo"                    >Low  mixing</option>
+                <option value="Hi" disabled           >High mixing</option>  
+                <option value="Lo" disabled           >Low  mixing</option>
             </select>
 
 			<!-- scale no longer needed.  But EV vs AV vs TNC is for diff proj 
