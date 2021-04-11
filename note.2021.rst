@@ -13,8 +13,19 @@ run wrapper, under old name, caAirCsv2gson.sh, slight update for In/Out dir path
 cd ~/tin-gh/inet-dev-class/mapbox
 ./caAirCsv2gson.sh 2>&1 | tee adjoinCsv2gson.2021.0410.log
 
-(ran on wsl 450)
-
+(conversion ran on wsl 450)
 spot check dacsjvnew_AVOC_07_Day_Sp
+
+
+upload to mapbox, to acc tin117
+run on lunaria (got mapbox py venv installed 2021.04)
+
+cd ~/tin-gh/inet-dev-class/mapbox
+setup mapbox token per 
+caair_uploader.sh
+export SECRET=...
+
+cd ~/tin-gh/inet-dev-class/mapbox/DATA_adjoin_0410
+../caair_uploader.sh 2>&1 | tee -a  ../adjoin_uploader.2021_0411.log
 
 
