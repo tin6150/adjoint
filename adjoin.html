@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html>
+
+
+<!--
+Adjoin 
+new version for 2021 data
+mapbox tin117
+-->
+<head>
+    <meta charset='utf-8' />
+    <title>Adjoin - Sustainable Energy System & Scientific Computing Collaboration (t6@0411)</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Global site tag (gtag.js) - Google Analytics tin@lbl - to track user interest and future development effort -->
+	<!-- 2020.0118 new poroperty as "adjoin.lbl.gov", tracking id: UA-134625383-3 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134625383-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-134625383-3');
+    </script>
+		<!--
+		-->
+
+
+    <!--
+    below is for form inputForm
+    adding jquery-ui https://jqueryui.com/slider/
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    -->
+		<!-- if need jquery, use newer version -->
+    <!--
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https:// x code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https:// x code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    --> 
+	<!-- see jQuery versions at https://code.jquery.com/jquery/ -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; }   /* map cover whole page, map-containe no special styling, fall under this body style  */
+        /*#map { position:absolute; top:0; bottom:20px; width:100%; } */
+        #map { 
+		position:absolute; 
+		top:0;  
+		margin-top: 20; /* attributionCss use 20px font */
+		bottom: 0px; 	/* this affect bottom padding where mapbox logo appears.  Actually leave a horizontal white space gap with no map data. */
+		width: 100%;    /* width of map (?) */
+	} 
+
+	/* from https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/ for population density legend */
+    /* scale bar in bottom left (BL)? */
+	.legend {
+	    /*background-color: rgba(255,255,255,0.65);   /* #fff;*/
+        background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+	    border-radius: 3px;
+	    bottom: 60px; /* 30px; */  /* use 60px if have scale, 30px w/o scale ruler bar */
+	    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+	    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	    padding: 10px;
+	    position: absolute;
+	    /*right: 10px; */
+	    left: 10px;  
+	    /* right: 10px; */    /* can move scale legend to right with this */
+	    z-index: 1;
+	}
+	.legend h4 {
+	    margin: 0 0 3px;
+	}
+	.legend div span {
+	    border-radius: 50%;
+	    display: inline-block;
+	    height: 10px;
+	    margin-right: 5px;
+	    width: 10px;
+	}
+	
+	/* this one is used in div for calculator result so units appear next to number, instead of new line */
+	.noNewLine {
+		display:inline;
+	}
+	/* trying to format the now customized attribution feature, but dont seems to get it to work  */
+	#attribution-layer {
+       	    margin-left: 1000px;	
+            background: rgba(30, 30, 30, 0.6);  /* this should be dark to black...  255 255 255 is pure white */
+	}
+	
+	/* top box for attribution -- maybe not used anymore? */
+	.attributionCss {
+	  /*transform: rotate(90deg);  */
+	  position: absolute;
+	  top: 0;   /* 0 before rotate */
+	  left: 0;    /* 0 before rotate */
+	  /*right: 3;     /* */
+	  /*background: rgba(250, 250, 250, 0.9);  /* 255 255 255 is pure white */
+      background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+	  margin-left: 6px; 
+	  margin-right: 46px; 
+	  /*overflow: auto;*/
+	  border-radius: 3px;
+	  font: 20px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
+	  z-index: 2;		/* 1 appear behind copyright link; 5 would cover it. I have another (i) for the link :) */
+	}
+
+	.calc_Css {
+	  /*visibility: hidden;*/
+	  display: none;
+	  position: absolute; 
+	  /* position: relative; */
+	  max-width: 400px;
+	  top:  10%; 
+	  left: 0; 
+	  /*right: 3;     /* */
+	  margin-left:  12px;  /* 10px match all other overlay boxes, give a few pixel to click "hide calculator" in small screen */
+	  /*margin-right: 1px; */
+	  padding-left:   20pt;    /* this give some space around the results table */
+	  padding-right:  20pt; 
+	  padding-bottom: 20pt; 
+	  /*overflow: auto;*/
+	  z-index: 5;		/* 1 appear behind copyright link; 5 would cover it. I have another (i) for the link :) */
+	  border-radius: 3px;
+	  /*background: rgba(250, 250, 250, 0.9);  /* 255 255 255 is pure white */
+      /*background-color: rgba(250, 250, 224, 0.6);  /* this is greenish/yellowish */
+      background-color: rgba(30, 250, 30, 0.8);  /* this is lime green */
+      /*background: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+	  font: 12pt/12pt 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12pt here, not px  */
+	}
+
+
+
+	.attrib2_input_Css {
+	  position: absolute;
+	  top: 0;   /* 0 before rotate */
+	  left: 0;    /* 0 before rotate */
+	  /*right: 3;     /* */
+	  /*background: rgba(250, 250, 250, 0.9);  /* 255 255 255 is pure white */
+      background-color: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+      /*background: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+	  margin-left: 6px; 
+	  margin-right: 46px; 
+	  /*overflow: auto;*/
+	  border-radius: 3px;
+	  font: 20px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
+	  z-index: 2;		/* 1 appear behind copyright link; 5 would cover it. I have another (i) for the link :) */
+	}
+
+	/* trying nested css for inputbar -- didnt work as hoped */
+	.attributionCss inputCss2 {
+	    background-color: rgba(250,224,224,0.65);   /* blue greenish? */
+	}
+
+	/* top (TL) box for user input */
+	.inputCss {
+	    /*background-color: rgba(250,224,224,0.65);   /* blue greenish? */
+	    /*border-radius: 3px; */
+	    top: 16px; /* space from top of body, so need to add space for name, but that was 20px font... 14 px was enought... *sigh css* */  /* NOT really: thickness of input area */
+	    /*top: 5px; /* 30px; */  
+	    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+	    padding: 5px; /* this is the height of the drop down */
+	    /*right: 10px; */
+	    /*left: 100px;  /* this leaves a gap to the left where slider start */
+	    /*height: 100%;   /* use this if doing vertically positioned slider bar*/
+	    position: absolute;
+        margin-top: 6px;
+        /*margin-right: 100px;       /* margin-left and width combined to position the slider in center; but mapbox logo is num of pixels :( */
+        /*margin-left: 100px;       /* margin-left and width combined to position the slider in center; but mapbox logo is num of pixels :( */
+	    /*width: 300px;       /* create scroll bar when screen is too narrow... 84% seems ok compromise  */
+            opacity: 0.9;
+	    /* right: 10px; */    /* can move scale legend to right with this */
+	    z-index: 5;		/* 1 appear behind copyright link; 5 would cover it. I have another (i) for the link :) */
+	}
+
+    /* 'meater reading box' :: feature info box in bottom right (BR).  show value to user as mouse hoover an grid/polygon. */
+    .map-overlay-features {
+        visibility: visible; /* hidden */
+        position: absolute;
+        height: 120px;      /* smelly 240px */
+        width:  200px;      /* formerly 260px, 200px works ok on iphX, maybe could shrink to 190px */
+        margin-top: 10px;
+        margin-bottom: 22px;
+        margin-left:  10px; 
+        margin-right: 10px; /* choropleth used 20px */
+        padding-left: 8px;
+        /*bottom: 10px;  /* 10px add buffer at bottom for (i) attributes info icon */
+        bottom: 0;  /* 0 put box on top, other number put on top.  maybe 30px add buffer at bottom */
+        right:  0;  /* anything other than 0 put box on left */
+        background: rgba(250, 250, 224, 0.8);  /* this is greenish/yellowish */
+        font-family: Arial, sans-serif;
+        overflow: auto;
+        border-radius: 3px;
+    }
+	
+    /* debug info box to display tileset features info - top right (TR)- hidden when not in use */
+    .map-overlay-features-dbg {
+        visibility: hidden; /* ++2020.0119 DBG++ hidden; /* visible */
+        position: absolute;
+        top: 0;
+        margin-top: 70px; /*40px;    /* so that it appears below the drop down selectors.  40px for single line of names, 70px for 2 lines */
+        margin-right: 50px;  /* so that it has room for the zoom control buttons */
+        right: 0;
+        /*background: rgba(250, 250, 250, 0.4);  /* 255 255 255 is pure white */
+        background: rgba(20, 250, 20, 0.4); 
+        /*width: 666px;     height: 720px;      /* good for huge amount of data */
+        width: 480px;     height: 500px;      /* good for lots of data */
+        /*width: 300px;     height: 200px;        /* just for map addLayer status */
+        overflow: auto;
+        border-radius: 3px;
+        font: 13px/13px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
+        /*font-family: Arial, sans-serif;*/
+    }
+
+    /* this fit a tiny print in bottom right about what layer is loaded */
+	.map-overlay-feedback-dbg {
+	  position: absolute;
+	  bottom: 0; right: 0;   /**/
+	  /* bottom: 0; left: 0; /**/
+	  /* top: 0; right: 0;   /**/
+	  background: rgba(250, 250, 250, 0.4);  /* 255 255 255 is pure white */
+	  margin-right: 2px; 
+	  overflow: auto;
+	  border-radius: 3px;
+	  font: 11px/11px 'Helvetica Neue', Arial, Helvetica, sans-serif;  /* 12px, not 12 pt!! they turn out to be very small */
+	  /*font-family: Arial, sans-serif;*/
+	}
+
+
+    </style>
+</head>
+
+<!-- ################################################################# -->
+<!-- ################################################################# -->
+<!-- ####  HTML  BODY         ######################################## -->
+<!-- ################################################################# -->
+<!-- ################################################################# -->
+
+<body>
+
+<!-- Tyler had a navbar at top, having some menu, just trying to be closer to his model, i dont plan to have anything here  -->
+<!-- Hmm this does not appear -->
+<div id='navbar'>
+</div>
+
+
+
+<!-- Tyler had a map-container below the navbar.  the map-container encloses the map div.  just trying to be closer to his model, i so far dont need this extra div container  -->
+<!-- no special css for map-container, so it falls under the body css styling -->
+<div id='map-container'>
+
+  <div id='map'></div>
+    <!--
+    <div id='mapAlt' class='map'></div>
+    -->
+
+
+    <div id="attribution2+inputbar" class="attrib2_input_Css">
+        <!-- had to add an extra css to hold this -->
+		<div id="attribution2"> <!-- class="attributionCss"> -->
+            <A HREF="https://github.com/lbnl-scienceit/adjoin">Adjoin</A>.  An app from the collaboration of Sustainable Energy System and Scientific Computing, LBNL.  
+            © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown.
+		</div>
+
+
+
+	<div id="inputbar"><!-- class="inputCss"> -->
+        <!--    FIXME calculator disabled till complete development
+            calculator should be done, at least on smelly (unless this was not the latest code)
+            button can perhaps be repurposed for help/info "pop up" in the future
+			<BUTTON id="ShowCalculator">Show Calculator</BUTTON>
+	-->
+            <!--html element for drop down picker goes here-->
+			<!-- 1st data set for adjoin is DAC-topo3JulNOxSpAl.geojson -->
+			<!-- 2nd data set for adjoin is DAC-topo307AVOCSpAl.geojson -->
+            <select id="receptorSelectorUI"> <!-- site -->  <!--to emulate Tyler <select id="polygon-layer-selector"> -->
+                <option value="NA"        disabled           >Receptor </option>	       
+                <option value="dacsjvnew" selected='selected'>DAC burden</option>	
+                <option value="o3gt70sjv"                    >Ozone Exceedance</option>	
+            </select>
+
+			<!-- Pollutant Type / Precursor, formerly sourceSelectorUI -->
+            <select id="precursorSelectorUI">
+                <option value="NA" disabled >Pollutant</option>	       
+                <option value="NOx">NOx</option>
+                <option value="AVOC">AVOC</option>
+           </select>
+
+
+			<!-- Meteorological Episode, formerly seasonSelectorUI -->
+            <select id="episodeSelectorUI">
+                <option value="NA"  disabled >Episode</option>	       
+                <option value="06">Jun</option>
+				<option value="07" selected="selected">Jul</option><!-- value="209" -->
+                <option value="08">Aug</option>
+                <option value="Mx">Max(Jun-Aug)</option>
+             </select>
+
+			<!-- hour mixing, same name as before -->
+            <select id="hourSelectorUI"> <!--mixing depends on time of day-->
+                <option value="NA" disabled >Mixing Hours</option>	       
+                <option value="All" selected='selected'>Whole day</option>         <!--aka All Day-->
+                <option value="Day"                    >Day   (7am-7pm)</option>   <!--formerly Hi-->
+                <option value="Nit"                    >Night (7pm-7am)</option>   <!--formerly Lo-->
+            </select>
+
+		    <!-- Sensitivity Type (new) -->
+            <select id="sensitivitySelectorUI">
+                <option value="NA" disabled >Sensitivity</option>	       
+                <option value="Sp">S+</option>
+                <option value="Sx" disabled>Sx</option>
+           </select>
+
+			<!-- scale no longer needed.  But EV vs AV vs TNC is for diff proj 
+			<select id="scaleSelectorUI">
+                <option value="NA"  disabled ></option>	       
+                <option value="10x" selected='selected' ></option>
+            </select>
+			-->
+
+        </div><!-- end for inputbar -->
+    </div><!-- end for "attribution2+inputbar"-->
+    <BR>
+    <BR>
+    <BR>
+    <BR>
+
+	<!-- calculator.  position: relative, so above BR will govern where it pop up -->
+	<!-- https://photos.app.goo.gl/iANhYY6xAcnW96hp8 -->
+
+	<div id="distanceCalc" class="calc_Css">
+		<center>
+		<h3>Odor Dispersion Distance Calculator <BR>
+		</h3>
+		<BR>
+		<BR>
+		<TABLE>
+			<TR>
+				<TD>Enter emission rate </TD>
+				<TD><input type="text" name="distanceCalculatorInput" id="distanceCalculatorInput" size="6" value="5.0"> </TD>
+				<TD>ou/s</TD>
+			</TR>
+		</TABLE>
+		<TABLE>
+			<TR>
+				<TD></TD>
+				<TD><BUTTON id="CalculateButton4distCalc">Calculate</BUTTON></TD>
+				<TD></TD>
+			<TR>
+		</TABLE>
+		<h3>
+			Separation Distance for <EM><DIV ID="siteLocation4distCalc">SiteLocation</DIV></EM>
+		</h3>
+		<BR>
+		<TABLE border="1">
+			<TR>
+				<TD></TD>
+				<TD>Low Mixing <BR> 7-8am; 6-9pm</TD>
+				<TD>High Mixing<BR> 9am-5pm</TD>
+				<TD>Ext Mixing <BR> 7am-9pm</TD>
+			</TR>
+			<TR>
+				<TD>Spring</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_lowMixing_spring">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_highMixing_spring">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_extMixing_spring">Result</DIV> m</TD>
+			</TR>
+			<TR>
+				<TD>Summer</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_lowMixing_summer">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_highMixing_summer">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_extMixing_summer">Result</DIV> m</TD>
+			</TR>
+			<TR>
+				<TD>Autum</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_lowMixing_autum">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_highMixing_autum">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_extMixing_autum">Result</DIV> m</TD>
+			</TR>
+			<TR>
+				<TD>Winter</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_lowMixing_winter">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_highMixing_winter">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_extMixing_winter">Result</DIV> m</TD>
+			</TR>
+			<TR>
+				<TD>All Seasons</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_lowMixing_allSeasons">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_highMixing_allSeasons">Result</DIV> m</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_extMixing_allSeasons">Result</DIV> m</TD>
+			</TR>
+		</TABLE>
+		<BR><BR>
+		<TABLE>
+			<TR>
+				<TD></TD>
+				<TD><BUTTON id="ShowRateCalculatorButton">Change to Rate Calculator</BUTTON></TD>
+				<TD></TD>
+			</TR>
+		</TABLE>
+		</center>
+	</div>   <!-- end div for calculator -->
+
+	<!-- being div for RATE calculator -->
+	<div id="rateCalc" class="calc_Css">
+		<center>
+		<h3>Allowable Odor Rate for stated distance<BR>
+		</h3>
+		<BR>
+		<BR>
+		<TABLE>
+			<TR>
+				<TD>Enter desired separation distance </TD>
+				<TD><input type="text" name="rateCalculatorInput" id="rateCalculatorInput" size="6" value="1000"> </TD>
+				<TD> m</TD>
+			</TR>
+		</TABLE>
+		<TABLE>
+			<TR>
+				<TD></TD>
+				<TD><BUTTON id="CalculateButton4rateCalc">Calculate</BUTTON></TD>  <!-- cannot be overloaded, duplicate id find fird first match and stops -->
+				<TD></TD>
+			<TR>
+		</TABLE>
+		<h3>
+			Allowed Max Emission Rate for <EM><DIV ID="siteLocation4rateCalc">SiteLocation</DIV></EM>
+		</h3>
+		<BR>
+		<TABLE border="1">
+			<TR>
+				<TD></TD>
+				<TD></TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD>Spring</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_distance2rate_spring">Result</DIV> ou/s</TD>
+			</TR>
+			<TR>
+				<TD>Summer</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_distance2rate_summer">Result</DIV> ou/s</TD>
+			</TR>
+
+			<TR>
+				<TD>Autum</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_distance2rate_autum">Result</DIV> ou/s</TD>
+			</TR>
+
+			<TR>
+				<TD>Winter</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_distance2rate_winter">Result</DIV> ou/s</TD>
+			</TR>
+
+			<TR>
+				<TD>All Seasons</TD>
+				<TD><DIV CLASS="noNewLine" ID="calc_result_distance2rate_allSeasons">Result</DIV> ou/s</TD>
+			</TR>
+		</TABLE>
+		<BR><BR>
+		<TABLE>
+			<TR>
+				<TD></TD>
+				<TD><BUTTON id="ShowDistanceCalculatorButton">Switch to Distance Calculator</BUTTON></TD>
+				<TD></TD>
+			</TR>
+		</TABLE>
+		<BR><BR>
+		</center>
+	</div>   <!-- end div for RATE calculator -->
+
+    <!-- legends  from https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/ -->
+    <!--<div id='legend' class='legend' style='display: none;'> -->
+    <!-- ++TODO
+    // adjoin scale explanation by Ling:
+
+    The unit is for S+ sensitivity, for each grid, the value =  change in ozone in the receptor (purple line marked region) when adding a unit of emission rate of NOx (or AVOC) to that grid. 
+
+    The unit is ppb (ozone change at the receptor) per gram of NOx (or AVOC) emitted per second per km2.   
+
+    We may change the unit to be ppb per kg of emission per day or per year per grid later, but the units are interchangeable by some unit conversion. 
+    But essentially, they all mean how much ozone at the receptor will change in response to a unit (defined by us) addition of emissions at a given grid.
+
+    ////
+
+    So as the value of any given grid location basically represents the potential influence of unit emissions from that grid on a receptor community, 
+    essentially we are mapping out all influential source locations with respect to that community that we wanna protect.
+
+    The webtool will provide people a visual aid to navigate within and around a certain community to identify places 
+    where they wanna reduce emissions or avoid adding new emissions (e.g. built a plant) in order to maximize the benefit of protecting air quality of that community.
+
+    Does that make sense?
+
+    Below is just legend, not how actually colored!
+    xref: adjoinScale
+    -->
+    <div id='legend' class='legend' >
+        <!--3³  2020.0206-->
+        Impact on Receptor  <BR>
+        ppb/(g/[h*km2])
+        <div><span style='background-color: #f2f3f4'></span>1.0e-6 and below</div>
+        <div><span style='background-color: #00d900'></span>5.0e-6</div>
+        <div><span style='background-color: #FEd976'></span>1.0e-5</div>   
+        <div><span style='background-color: #FD8D3C'></span>1.5e-5</div>    
+        <div><span style='background-color: #FC4E2A'></span>2.0e-5</div>
+        <div><span style='background-color: #E31A1C'></span>4.0e-5</div>
+        <div><span style='background-color: #BD0026'></span>8.0e-5</div>
+        <div><span style='background-color: #800026'></span>1.0e-4 and above </div>
+        <!--<div><span style='background-color: #7c27c2'></span>tba</div>
+            <div><span style='background-color: #5b08a3'></span>&gt;100</div>-->
+    </div>
+
+    <!-- this create the bottom right info box -->
+    <div class='map-overlay-features' id='features'>
+            <!-- this is title of bottom right box -->
+            <H3>Impact on Receptor, in ppb/(g/[h*km2]) :</H3> 
+            <div id='pd'><p>(Hover over data point)</p></div>   <!-- static text, replaced later by JS -->
+    </div>
+
+    <!-- ZWEDC_gson.html still have that debug data box, but at bottom rather than top -->
+    <div class='map-overlay-features-dbg' id='featuresDbg' >
+        Temporary debug window - Tileset feature data.
+        <!-- static text, replaced later by JS at map.on('mousemove'...) -->
+    </div>
+    
+    <!-- this fit a tiny print in bottom right about what layer is loaded -->
+    <div id='feedback' class='map-overlay-feedback-dbg'>
+        <!-- place holder text.  this text can/will be overwritten by jquery handler for the ui form selection -->
+        Map layer loading debug data will appear here.
+    </div>
+
+    <!-- Modify the style: right position so it matches with the mapbox attribution -->
+    <!-- https://stackoverflow.com/questions/40382515/how-do-i-add-custom-attribution-to-the-default-mapbox-gl-attribution-control -->
+    <!-- didnt do what i wanted, so disabling. -tin
+    <div id="attribution" class="mapboxgl-ctrl mapboxgl-ctrl-attrib mapboxgl-ctrl-bottom-right" style="position: fixed; bottom: 0; right: 230px;">
+        <a href="*">Attribution 1</a> &nbsp;|&nbsp; 
+        <a href="*">Attribution 2</a>  &nbsp;|&nbsp;
+        <a href="*">Attribution n</a> &nbsp;|
+    </div>
+    -->
+
+  </div><!-- id='map'-->
+</div> <!-- end div for map-container -->
+
+
+<!-- ########################################################### -->
+<!-- ########################################################### -->
+<!-- ###### JavaScript below     ############################### -->
+<!-- ########################################################### -->
+<!-- ########################################################### -->
+
+
+<script>
+
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////// calculator code below /////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+var odorCalculatorVisible = false;
+var calculatorMode = "distance";  // "rate" is the other calculator
+
+// actually no need to store this.  HTML DOM automatically store unless page reloaded
+//var rateInput4distCalc = 5.0;   		  // in ou/s     
+//var distInput4rateCalc = 1000;		  // in m
+
+//--$("#scaleSelectorUI").hide();  // do not show the 100% scale selector.  remove hack when adjoin data is finally adopted and not just showing odor data ++FIXEM 2020.0118
+
+$("#ShowCalculator").click( function() {
+	console.log("#ShowCalculator was clicked" );
+	if ( odorCalculatorVisible == false ) {
+	    odorCalculatorVisible = true;
+	    $("button#ShowCalculator").html("Hide Calculator");
+		calculateSeparationDistance();
+		$("#distanceCalc.calc_Css").show("slow");
+	} else {
+	    odorCalculatorVisible = false;
+	    $("#ShowCalculator").html("Show Calculator");
+		$("#distanceCalc.calc_Css").hide("slow");
+		$("#rateCalc.calc_Css").hide("slow");
+	}
+	console.log("odorCalculatorVisible is now: " + odorCalculatorVisible );
+});
+
+$("#ShowRateCalculatorButton").click( function() {
+	console.log("#ShowRateCalculator was clicked" );
+	$("#distanceCalc.calc_Css").hide("slow");
+	calculateRate();
+	$("#rateCalc.calc_Css").show("slow");
+});
+
+$("#ShowDistanceCalculatorButton").click( function() {
+	console.log("#ShowDistanceCalculator was clicked" );
+	$("#rateCalc.calc_Css").hide("slow");
+	calculateSeparationDistance();
+	$("#distanceCalc.calc_Css").show("slow");
+});
+
+$("#CalculateButton4distCalc").click( function() {
+		calculateSeparationDistance();
+});
+$("#CalculateButton4rateCalc").click( function() {
+		calculateRate();
+});
+
+function getCurrentSite() {
+	// retrieve site name, so that formula knows which set of weights to use, 
+	// also set text of calculator accordingly
+	// currentSite = document.getElementById("siteSelectorUI").value;
+    currentSite = "SjFresno"; //adjoin dont need this
+	return currentSite;
+};
+
+function calculateSeparationDistance() {
+	console.log("#CalculateButton4distCalc was triggered" );
+	var inputNum = document.getElementById('distanceCalculatorInput').value;
+	var lowMixing_spring  = inputNum * 10;
+	var highMixing_spring = inputNum * 20;
+	var lowMixing_summer  = inputNum * 30;
+	var highMixing_summer = inputNum * 40;
+	console.log("inputNum was:" + inputNum );
+
+	//document.getElementById('siteLocation').innerHTML = getCurrentSite();
+	$('#siteLocation4distCalc').text( getCurrentSite() );
+	document.getElementById('calc_result_lowMixing_spring').innerHTML = lowMixing_spring;
+	document.getElementById('calc_result_highMixing_spring').innerHTML = highMixing_spring;
+	document.getElementById('calc_result_lowMixing_summer').innerHTML = lowMixing_summer;
+	document.getElementById('calc_result_highMixing_summer').innerHTML = highMixing_summer;
+};
+
+function calculateRate() {
+	console.log("#CalculateRate4rateCalc was triggered" );
+	var rateCalculatorInput = document.getElementById('rateCalculatorInput').value;
+	var rate4spring  = rateCalculatorInput / 100;
+	var rate4summer  = rateCalculatorInput / 200;
+	//... ++
+	var rate4allSeasons  = rateCalculatorInput / 500;
+
+	//document.getElementById('siteLocation').innerHTML = getCurrentSite();
+	$('#siteLocation4rateCalc').text( getCurrentSite() );
+	document.getElementById('calc_result_distance2rate_spring').innerHTML = rate4spring;
+	document.getElementById('calc_result_distance2rate_allSeasons').innerHTML = rate4allSeasons;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////// mapbox code below ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//mapboxgl.accessToken =   'pk.eyJ1Ijoic241MCIsImEiOiJjam8weWl0dm0wNWVhM3dubmgyb3hwaTZsIn0.2Cvl-nnhZAoavESou_RqiQ'; // Sn  (post?) 2018-12-07   pk = public token
+mapboxgl.accessToken =   'pk.eyJ1IjoidGluMTE3IiwiYSI6ImNrNWxnd21ydjBvc2UzZG8wanQzaGwzcGIifQ.3_B2PYgav56oacPlVu5u9w'; // tin117 2020.0119
+var dbgTracer = "dbgTracerDeclared \t";
+var currentLoadedMapLayer  = "";
+var currentLoadedMapSource = "";
+var prevSite = "";
+var currentSite = "";
+//var mapboxUser = "sn50";
+var mapboxUser = "tin117";
+// below are mostly for debuging use
+var getInputSelectorCounter = 0;
+var addLayerCounter = 0;
+var addSourceCounter = 0;
+var rmLayerCounter = 0;
+var rmSourceCounter = 0;
+
+// these aren't global, just DOM-wide object vars :)
+// store parallel hash of lon/lat of sites.   eg lon['sfzwedc'], lat['sfzwedc'] for use with flyTo()/panTo
+// http://www.mojavelinux.com/articles/javascript_hashes.html 
+var lon = {};
+var lat = {}; 
+//var counterFlyTo = 0;	// count number of flyTo() executed.  mostly for first load not to move since URL may have specific zoom/lat/lon.  hmm... but layer info wouldn't be loaded.  really need url to have that info.  rather have it fly than user think buggy software with no layer!!
+// hmmm... can map find out nearnest site on display and load that layer??  prob lot of work!
+
+
+// note there is a map.remove() ... 
+var map = new mapboxgl.Map({
+    container: 'map',	// container id
+    //style: 'mapbox://styles/mapbox/light-v9',
+    //style: 'mapbox://styles/mapbox/dark-v9',		// alt basemap style
+    //style: 'mapbox://styles/sn50/cjq8j89hqavyu2sqs3kctxqjj', 	// cali terrain, probably just the base layer map from mapbox.  used in early caair_zwedc
+    //style: 'mapbox://styles/sn50/cjrd1zmyy1kds2tp6k4az7apr',    // sites_info_polyg  with satellite street as base layer, too many colors, dont show data well.
+    // #### wtf? mapboxstyles change here!
+    //style: 'mapbox://styles/sn50/cjreie0fs4o0m2sqghg3ukiqn', 	// sites_info_pt_ctr with cali terrain     as base layer .  pt in center is pretty small, no need for TopLeft position.
+    //style: 'mapbox://styles/sn50/cjrekq65d4o7o2slw5x262rb0',	// sites_info_polyg  + sites_info_pt_topLeft  with cali terrain.  corner point turns out to be bottom left, but whatever. 
+    //style: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6', // 2020.0119 tin117 Basic (light)
+    style: 'mapbox://styles/tin117/ck5un3c7t00wy1in3rn7v33ak',   // tin117: outdoor-NoLandUse (and off hill shades, to make it very uniform light background)  
+
+    
+   
+    // https://docs.mapbox.com/mapbox-gl-js/api/#attributioncontrol, but see the top part on options.attributionControl 
+    // these are all options for the map object 
+    attributionControl: false,                  // setting to false remove the fine print at bottom.  I still have an info circle that pop up, should be good enough
+    hash: true,     // change URL with a hash of map zoom/lat/long    eg append: #15/37.434/-121.945   # notice it is lat/long in this url!!  so it is zoom/y/x
+
+    //zoom: 13,
+    center: [-119.7871, 36.7378],  // Fresno W, N
+    //center: [-122.447303, 37.753574]   SF
+    //center: [-121.945, 37.434],  // alviso ZWEDC
+    //center: [-121.5240213, 36.9481043],  // Gilroy Z Best Products
+    //center: [-121.985287624997,37.4077223978109],  // data point from TMP test, in santa clara!
+    //zoom: 19   	// odor data tileset is said to be z0-z19, 19+ will "appear simplified"
+    //zoom: 16    	// see building shape, needed cuz 50m x 50m (or 25m?)
+    //zoom: 15    	// see buildings, needed cuz 50m x 50m (or 25m?)   //++ maybe for dbg use to reduce map load
+    //zoom: 14.2  	// zoomed in and good for zwedc demo with many low value data points // 1000 ft
+    //zoom: 13.5  	// zoomed in
+    //zoom: 12		// see whole coverate area of ZWEDC
+    //zoom: 11 		// 1mi scale bar.  Fresno-Kerman vicinity,    with some data from previous project visible.
+    //zoom: 10 		// 3mi scale bar.  Fresno-Kingsburg vicinity, with some data from previous project visible.
+    //zoom: 10  	// circle filled point data is said to be z0-z10, 10+ will "appear simplified"  
+    //zoom: 9  		// see most of BAAQMD   // 5mi 
+    //zoom: 8		// site-info as polygon said to be good at z0-z8.  8+ will "appear simplified"
+    zoom: 6.5 	//30mi  ## good for adjoin overview map 
+    //zoom: 6.1 	// see most of CA  	// 50mi    
+    //zoom: 5.5		// see whole CA
+    
+});
+
+//-color gradient from choropleth tutorial  https://www.mapbox.com/help/choropleth-studio-gl-pt-2/
+//-var layers = ['0-10', '10-20', '20-50', '50-100', '100-200', '200-500', '500-1000', '1000+'];
+//-var colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
+// dont think these below are used anymore
+//var zwedc_layers = ['0-0.01', '0.01-0.1', '0.1-1.0', '1.0-3.0', '3.0-5.0', '5.0-8.0', '8.0-10', '10-15',    '15+'];	// Tyler legend needed by markers
+//var zwedc_colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026', '#000000']; // Tyler legend needed by markers 
+
+// adjoinScale
+// modeleed after styleCountyPolys(poly_data_field) 
+function styleScaleLegendPolys(attribute) {
+    return [
+      'interpolate',
+      ['linear'],
+      ['get', attribute],
+
+        // xref: adjoinScale 2020.0206 check in #3
+        // Tyler's framework used 10 entries here ; changed to Ling's scale 
+        // color picker https://www.w3schools.com/colors/colors_picker.asp?colorhex=ADFF2F
+        1.0e-6, '#f2f3f4', // white
+        5.0e-6, '#00D900', // green      
+        1.0e-5, '#FED976', // yellow 
+        1.5e-5, '#FD8D3C', // orange  
+        2.0e-5, '#FC4E2A', // red/orange 
+        4.0e-5, '#E31A1C', // very red   
+        8.0e-5, '#BD0026',         
+        1.0e-4, '#800026'  // dark red 
+    ]
+};
+
+// the attribute, 'max', dont do anything here  
+function styleScaleLegendOpacity(attribute) {
+    return [
+      'interpolate',
+      ['linear'],
+      ['get', attribute],
+      // Tyler framework used 10 entries here .  adjoin need to reverse color and opacity scale as val closest to zero is most impactful (since range 1e-4 to 1e-14). 
+        1.0e-6,  0.1,
+        5.0e-6,  0.2, 
+        1.0e-5,  0.3, 
+        1.5e-5,  0.40, 
+        2.0e-5,  0.50, 
+        4.0e-5,  0.60, 
+        8.0e-5,  0.70, 
+        1.0e-4,  0.80  
+        // graded opacity increases as value increases.  look pretty, but may be hiding data from view ##
+    ]
+};
+
+
+// find out what combination is selected in the form selections UI ... eventually trigger loading maplayer...   
+// depending on combination, unload and load new layer data, then update map.  no need to do new map
+// Need update this to pick new UI selector for adjoin 2020.0119.  
+// 1st input is DAC-topo3JulNOxSpAl.geojson
+function getInputFormSelection() {
+        console.log( "--dbg-- getInputFormSelection() begin" );
+        getInputSelectorCounter++;
+        inputFormSelection  = document.getElementById("receptorSelectorUI").value;
+        inputFormSelection += document.getElementById("episodeSelectorUI").value;;
+        inputFormSelection += document.getElementById("precursorSelectorUI").value;;
+        inputFormSelection += document.getElementById("sensitivitySelectorUI").value;;
+        inputFormSelection += document.getElementById("hourSelectorUI").value;;
+        feedback.innerHTML  = inputFormSelection;					
+        if( currentLoadedMapLayer != "" ) {
+            console.log( "--dbg-- getInputFormSelection() :: IF, at currentLoadedMapLayer not empty " );
+            // https://docs.mapbox.com/mapbox.js/example/v1.0.0/layers/
+            //if (map.hasLayer('caair')) {     // err not a fn.  so cant call map.fn here? 
+            //    map.removeLayer('caair');
+            //    this.className = '';
+            //} 
+            rmLayerCounter++;
+            map.removeLayer(  currentLoadedMapLayer );
+            //map.removeLayer('caair');
+            rmSourceCounter++;
+            map.removeSource( currentLoadedMapSource );
+            this.className = '';                                //not sure what this does, got it from some web eg.
+            feedback.innerHTML = "removeLayer executed";
+            console.log( "--dbg-- getInputFormSelection() :: IF, at currentLoadedMapLayer not empty... removeLayer executed " );
+        }
+         
+        // maybe split out the mapLayer code to be called separately??   meh, it is okay here ## 
+        
+        currentLoadedMapLayer  = inputFormSelection;       // this is essentially global var
+        currentLoadedMapSource = inputFormSelection;       // this is essentially global var
+        addLayerCounter++;
+        addSourceCounter++;
+        console.log( "--dbg-- getInputFormSelection() :: currentLoadedMapLayer:" );
+        console.log( currentLoadedMapLayer );
+        console.log( "--dbg-- getInputFormSelection() :: currentLoadedMapSource:" );
+        console.log( currentLoadedMapSource );
+        //-- add a polygon outlining the receptor region --//
+        //-- eg tin117.receptor-polygon-DAC-topo3 --//
+        //++ may need to add remove layer code if more than one receptor in future ++TODO adjoin
+        map.addLayer({
+            id: "receptor-polygon-DAC-topo3", 
+            type: "line",
+            source: { 
+                type: 'vector',
+                url: 'mapbox://tin117.receptor-polygon-DAC-topo3'   //++ dynamic name may be needed in future
+            },
+            "source-layer": "receptor-polygon-DAC-topo3",  
+            "layout": {
+                "line-join": "round",
+                "line-cap": "round"
+            },
+            "paint": {
+                "line-color": "#263aad", // blue  "#ff69b4", // red
+                "line-opacity": 0.8,
+                "line-width": 2 //1
+            }
+        }); // end map.addLayer(...) for receptor polygon
+        //-- add ozone data that is colored per gradient --//
+        noUseObjHandle = map.addLayer({
+            id: currentLoadedMapLayer, //--id: 'caair',
+            type: 'fill',
+            layout: {
+                visibility: 'visible'
+                //visibility: zwedcPolyVis
+                //visibility: 'none'		// can use this to make ZWEDC data disapear ##
+            },     
+			// around here should be groundzero of adjoin data layer not displaying... ++FIXME 
+            // sn50.SfZwedcAllHiBi10x need to be in url and source-layer, w/ username in url, NO username in source-layer.  be careful!!    ++2020.0122
+		    // code seems fine, tile is loaded... maybe coloring problem?
+            source: {
+                type: 'vector',
+                //url: 'mapbox://sn50.aae3dmkj'   // ZWEDC 25x25 sq first test data set (at 10x?)
+                //url:   'mapbox://sn50.SfZwedcSprHiBi10x' 	                // 2nd csv2gson upload    ... next, try to make way to toggle between them.   hmm. ready to upload em all!
+                //url:   'mapbox://' + mapboxUser + "." + inputFormSelection  // caair
+                url:   'mapbox://' + mapboxUser + "." + inputFormSelection // 2020.0119 tin117 adjoin may need change here
+            },
+            //'source-layer': 'ZWEDC_50x50m-29q7xv',	// retrieved from mapbox web site Tile management...  [1st dummy test data]
+            //'source-layer': 'SfZwedcSprHiBi10x',	// no username prefix here!! duh!!
+            'source-layer': inputFormSelection,	    //  grab source layer name from parsed input form   // NO username here
+            paint: {
+                    'fill-antialias': false,    // remove gridline
+                    //'fill-color': 'rgba(61,153,80,0.55)',                    // https://www.mapbox.com/help/how-web-apps-work/#use-mapbox-gl-js-with-react ##
+                    // see git log 1dff205 for older version that had 'table' and in-place code here for fill-color and fill-opacity
+                    'fill-color': styleScaleLegendPolys('max'),  // this max atttribute is just a place holder...
+                    //'fill-opacity': polyLayerOpacity,
+                    //'fill-opacity': 0.6
+                    'fill-opacity': styleScaleLegendOpacity('max') // max attribute just a place holder
+            }
+        });  // end map.addLayer(...) for zwedc/caair        
+        document.getElementById('featuresDbg').innerHTML = "map.addLayer result:"  + noUseObjHandle + "--End--";  // noUseObjHandle dont give any info, always just 'Object object', it is not a return code indicating success or failure.  but browswer console network show tile loaded ok
+        feedback.innerHTML = inputFormSelection; // + " - layerAdded";
+        console.log( "--dbg-- getInputFormSelection() :: done addLayer:" + inputFormSelection );
+        console.log( "--dbg-- map.addLayer " + inputFormSelection + " result:"  + noUseObjHandle + "--End--" );
+        this.className = 'active';   // from mapbox layer eg... not sure what it does :(
+        
+        // above to load layer and draw
+        // depending on combination, unload and load new layer data, then update map.  no need to do new map
+        
+        // below for flyTo specific site, if it has changed
+        currentLoadedMapSource = inputFormSelection;       // cant use "this." just remember this is "global var"
+        //currentSite = document.getElementById("siteSelectorUI").value;
+        currentSite = "SjFresno"; // adjoin dont really need this, but on-load FlyTo let it center near Fresno
+        console.log( "currentSite  (make sure it is defined):"  );
+        console.log( currentSite  );
+        console.log( "lon:  (make sure it is not NaN)"  );
+        console.log( lon[currentSite]  );
+        var flyToLoc = {lon: lon[currentSite], lat: lat[currentSite] };
+        console.log( "prepping to fly from site: " + prevSite );
+        console.log( "prepping to fly to   site: " + currentSite );
+        console.log( "prepping to fly to lon/lat:"  );
+        console.log( flyToLoc  );
+        if( prevSite != currentSite )  {   
+            //-var pan2loc = {lon: -121.98, lat: 37.66};  // Dublin, but dont work. need more param.
+            //-map.panTo(pan2loc);   // need more param that i am not sure how to create yet  ... hmmm it is panTo(), though still take 3 params.
+            //~map.flyTo({center: [-121.98, 37.66]});   // https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto   // this works
+            console.log( " site change eval to true, about to execute fly"  );
+            //map.flyTo( flyToLoc );   // https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto   // this does NOT works.  
+            //map.flyTo( {center: [ flyToLoc ]} );   // https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto   // this does NOT works.  
+            map.flyTo({center: [ lon[currentSite], lat[currentSite] ]} );   // https://docs.mapbox.com/mapbox-gl-js/api/#map#flyto   // this is the one that work
+            prevSite = currentSite;
+        } else {
+            console.log( " site change eval to false, no flying"  );
+        }
+        
+        //--    $( "inputPicker" ).select( function() { alert( "select triggered" ); });
+}; //end fn getInputFormSelection 
+
+// == populate lon['site'] lat[] hashes for all refuse processing sites == //
+// store parallel hash of lon/lat of sites.   eg lon['sfzwedc'] lat['sfzwedc'] for use with flyTo()/panTo
+function buildLonLatHash() {
+    console.log( '--dbg-- buildLonLatHash begin' );
+    dbgTracer += " buildLonLatHash() \t";     // cant use "this." prefix to seek what I thought was object-wide var.  really just think of it as global then.
+    console.log( dbgTracer );
+    // this version has hard coded siteName/lon/lat
+    // snipplet of code generated via external script parsing the csv source
+    // from snipplet generated by sites_lonLat4js.py
+    lon['NcArcata'] = -124.090124 ;	 lat['NcArcata'] = 40.85562;
+    lon['SjAtwater'] = -120.63169 ;	 lat['SjAtwater'] = 37.276403;
+    lon['SjBakersfield'] = -118.973238 ;	 lat['SjBakersfield'] = 35.32572;
+    lon['SsCalexico'] = -115.505188 ;	 lat['SsCalexico'] = 32.671926;
+    lon['ScCorona'] = -117.604756 ;	 lat['ScCorona'] = 33.927683;
+    lon['SfDublin'] = -121.915158 ;	 lat['SfDublin'] = 37.68713;
+    lon['McEldorado'] = -121.060204 ;	 lat['McEldorado'] = 38.637366;
+    lon['SfFairfield'] = -122.078372 ;	 lat['SfFairfield'] = 38.222534;
+    lon['SjFresno'] = -119.893086 ;	 lat['SjFresno'] = 36.702497;
+    lon['NcHealdsburg'] = -122.862719 ;	 lat['NcHealdsburg'] = 38.583622;
+    lon['ScIeua'] = -117.601852 ;	 lat['ScIeua'] = 34.028642;
+    lon['ScJoint'] = -118.28581 ;	 lat['ScJoint'] = 33.801326;
+    lon['MdLancaster'] = -118.155984 ;	 lat['MdLancaster'] = 34.785119;
+    lon['CcMonterey'] = -121.769894 ;	 lat['CcMonterey'] = 36.70564;
+    lon['SsPalm'] = -116.498436 ;	 lat['SsPalm'] = 33.80629;
+    lon['SjPorterville'] = -119.048096 ;	 lat['SjPorterville'] = 36.076366;
+    lon['SvRedding'] = -122.369441 ;	 lat['SvRedding'] = 40.50298;
+    lon['SvSacramento'] = -121.463686 ;	 lat['SvSacramento'] = 38.448653;
+    lon['SdSandiego'] = -117.159168 ;	 lat['SdSandiego'] = 32.841723;
+    lon['ScSocwa'] = -117.683919 ;	 lat['ScSocwa'] = 33.466431;
+    lon['SfSoutheast'] = -122.391201 ;	 lat['SfSoutheast'] = 37.740667;
+    lon['NcUkiah'] = -123.191581 ;	 lat['NcUkiah'] = 39.112339;
+    lon['SvVacaville'] = -121.903879 ;	 lat['SvVacaville'] = 38.343537;
+    lon['SfZbest'] = -121.5240213 ;	 lat['SfZbest'] = 36.9481043;
+    lon['SfZwedc'] = -121.9507 ;	 lat['SfZwedc'] = 37.43469;
+
+    // manual entry: lon['SfZwedc'] = -121.94;   lat['SfZwedc'] = 37.43;
+  
+    console.log( '--dbg-- buildLonLatHash lon/lat: '  + lon['SfZwedc'] + "/" + lat['SfZwedc'] );
+    console.log( '--dbg-- buildLonLatHash end' );
+} // end buildLonLatHash
+
+
+
+
+// ################################################################################# //
+// ################################################################################# //
+// #### this look like start of execution of javascript code                    #### //
+// #### but start with defining responses to major events related to map action #### //
+// ################################################################################# //
+// ################################################################################# //
+
+console.log("--dbg-- 'main' of JS... before map.on('load'...) , calling buildLonLatHash()" );
+dbgTracer += " MainAftAllFnDeclare_b4map_on_load \t";     
+console.log( dbgTracer );
+buildLonLatHash();
+
+
+
+map.on('load', function () {
+    console.log("--dbg-- at map.on('load'...) start" );
+    dbgTracer += " at_map_on_load \t";   
+    console.log( dbgTracer );
+    getInputFormSelection();
+    map.addLayer({
+        "id": "terrain-data",
+        "type": "line",
+        "source": {
+            type: 'vector',
+            url: 'mapbox://mapbox.mapbox-terrain-v2'  // this loads a layer with countour lines, visible at zoom 9 and above.  (smelly and adjoin)
+            // style published from studio loaded here dont matter, below is where i tested and did not work.  style set in another section
+            //url: 'mapbox://styles/tin117/ck5un3c7t00wy1in3rn7v33ak'     // tin117: outdoor-NoLandUse 
+
+        },
+        "source-layer": "contour",   // this still shows countour lines in adjoin, but hiden at certain zoom level
+        "layout": {
+            "line-join": "round",
+            "line-cap": "round"
+        },
+        "paint": {
+            "line-color": "#263aad", // blue  "#ff69b4", // red
+            "line-opacity": 0.6,
+            "line-width": 1
+        }
+    });  // end map.addLayer(...)
+    console.log("--dbg-- at map.on('load'...) completed addLayer for countour" );
+    ///map.addLayer({
+        /// tin117.receptor-polygon-DAC-topo3
+    ///});  // end map.addLayer(...)
+    console.log("--dbg-- at map.on('load'...) completed addLayer for DAC-topo3 receptor polygon" );
+    //~ diff between "this.", "window." and just plain variable names.  in summary, dont use "this." to refer to "global", in browser need to use "window." or no prefix for the namespace
+    //~this.dbgTracer += " -this- aftAddLayerSite_info_pt \t";
+    //~console.log(this.dbgTracer);
+    //~dbgTracer += " -plain- aftAddLayerSite_info_pt \t";     // cant use "this." prefix to seek what I thought was object-wide var.  really just think of it as global then.
+    //~console.log(dbgTracer);
+    //~window.dbgTracer += " -window- aftAddLayerSite_info_pt \t";     // window. is the (optional) special keyword to access global var, usable in browser (but not in server-side code like Node.js).
+    //~console.log(window.dbgTracer);
+    
+    //------------- tried to change attribution, but not too sucessful  ------------ 
+    //   below isnt all that important.
+    map.addLayer({
+        "id": "attribution-layer",
+        "type": "circle",
+        "source": {
+            "type": "geojson",
+            "data": {
+                "type": "Feature",
+                "properties": {},
+                "geometry": null
+            }
+        }
+    });
+    //map.style.sourceCaches['attribution-layer']._source.attribution = "Adjoin. An app from the collaboration of SESG & SCG, LBNL. © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown";
+    map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://github.com/lbnl-scienceit/adjoin">Adjoin</A>';
+
+
+
+    // ################################################ //
+    // #### add handler for form selector
+    var inputFormSelection = "";
+    //-- Tyler's code has definition at this level
+    var poly_selector = document.getElementById("receptorSelectorUI");  // adjoin
+    poly_selector.addEventListener('change', function(e) {
+        //var testTin = "test123";
+        getInputFormSelection();
+		//--calculateSeparationDistance();  // update calculator siteLocation info 
+		//--calculateRate();  // update calculator siteLocation info 
+    });
+    var seasonSelector = document.getElementById("episodeSelectorUI");  // adjoin
+    seasonSelector.addEventListener('change', function(e) {
+        getInputFormSelection();
+    });
+    var hourSelector = document.getElementById("hourSelectorUI");  
+    hourSelector.addEventListener('change', function(e) {
+        getInputFormSelection();                                            // FIXME these are the one throwing error about layer  // should be fine now.
+    });
+    var sourceSelector = document.getElementById("precursorSelectorUI");  // adjoin
+    sourceSelector.addEventListener('change', function(e) {
+        getInputFormSelection();
+    });
+    var scaleSelector = document.getElementById("sensitivitySelectorUI");  // adjoin, replaced scale  ++ CLEANUP
+    scaleSelector.addEventListener('change', function(e) {
+        getInputFormSelection();
+    });
+    
+    dbgTracer += " map_on_load_END \t";
+    console.log(dbgTracer);
+});  // end map.on('load'...) 
+
+
+
+// mousemove should not  need to be inside map.on('load')
+// it updated featuresDbg correctly.
+// may want to see non geocoded pop up : 
+// * https://www.mapbox.com/mapbox-gl-js/api/#popup
+// * https://www.mapbox.com/mapbox-gl-js/example/popup-on-hover/
+map.on('mousemove', function (e) {
+      var text2display = "";
+
+      // #### Query for layer info and display it in feature box at bottom right (meter reading box) #### //
+      var features = map.queryRenderedFeatures(e.point, { layers: 
+	      [currentLoadedMapLayer] 
+	      //['caair'] 
+      });
+      //console.log("map.on('mousemove'... currentLoadedMapLayer: " + currentLoadedMapLayer);  // too much log.  it was fine
+      if (features.length > 0) {
+           // display ozone measurements (formerly odor OU value) in a "meter reading box"
+		   // adjoin sample data line in gson is (max is same as val, just placed there for backward compat w/ smelly) : 
+		   // {"val": 4.85951553378072e-10, "color": 4.85951553378, "mantissa": 0.5217865073, "exponent": -30, "max": 4.85951553378072e-10 }
+           ouVal = features[0].properties.val     ;   // adjoin O3, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
+           //ouVal = features[0].properties.max   ;   // odor  
+           //ouVal = features[0].properties.exponent   ;   // adjoin, should eventually try color which has a shifted value (offset by 1e10 or so) 
+		   // adjoin use 'val', try color(weight), color(rgb), mantissa, exponent ++
+           if( ouVal < 0.01 ) {
+                ouValString = ouVal.toExponential(1) ;
+           } else {
+                ouValString = ouVal.toPrecision(2);
+           }
+           text2display =  
+               "<H3>Impact on Receptor <BR> \n ppb/(g/[h*km2]) :</H3>\n" +
+               "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
+               //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
+               //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
+               "" + ouValString 	+ "<BR>\n"  
+      } else {
+        text2display = "<H3>Impact on Receptor <BR>\n ppb/(g/[h*km2]) :</H3>\n" + "- <BR>\n" 
+        (ppb/(g/h*km2))
+            //UiSelection = $("site").val();
+            //+ "UI: " + UiSelection ;
+      }
+
+      // this next one not limited to any layer -- ie query all layers
+      // and provide debug info for all fetures
+      var featuresSiteInfo = map.queryRenderedFeatures(e.point);
+      // odor had layer with site specific info.  adjoin may want a census layer to get population data (but has to calculate density which is not trivial).
+      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-pt-ctr'] });    
+      //var featuresSiteInfo = map.queryRenderedFeatures(e.point, { layers: ['sites-info-polyg'] });     // layer name in the style used by smelly
+      //var featuresSiteInfo = {}
+      document.getElementById('featuresDbg').innerHTML = "DBG:" + JSON.stringify(featuresSiteInfo, null, 2);      // this display  in top right  featuresDbg box  inside map-overlay-features-dbg ##
+      // rest actually want to add to existing bottom right map-overlay-features box
+      if (featuresSiteInfo.length > 0) {
+		    popDen2display = Math.round(featuresSiteInfo[0].properties.pop_density/100)*100;  // could not use toPrecision, so tricking it this way to display to nearnest 100s
+            text2display += "<BR>\n" 
+		      /// + "Facility: "    + featuresSiteInfo[0].properties.facility     + "<BR>\n"  
+		      //~ +"Pop Density: " + featuresSiteInfo[0].properties.pop_density.toPrecision(3)  + "<BR>\n"  
+		      //~+ "Pop Density: " + popDen2display + " person/mile²<BR>\n"     //maybe get from a census layer...
+		      /// + "Terrain: "     + featuresSiteInfo[0].properties.terrain      + "<BR>\n"  
+      } 
+
+      //text2display += " --TheEnd";
+      document.getElementById('features').innerHTML = text2display;
+
+});
+
+// https://www.mapbox.com/mapbox-gl-js/api/#navigationcontrol
+//var nav = new mapboxgl.NavigationControl();
+//map.addControl(nav, 'top-left');
+map.addControl( new mapboxgl.NavigationControl(), 'top-right');  
+
+map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector('body')}));
+
+// https://www.mapbox.com/mapbox-gl-js/api/#attributioncontrol
+//map.addControl(new mapboxgl.AttributionControl({
+map.addControl(new mapboxgl.AttributionControl({
+        compact: true,  // set to false to add an EXTRA line with info below prefixed.  true add an (i) icon
+        customAttribution: '<A HREF="https://github.com/lbnl-scienceit/adjoin"> © Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown @ LBNL</A>'
+}));
+
+// https://www.mapbox.com/mapbox-gl-js/api/#scalecontrol  // added to bottom, clobbering legend.
+var scale = new mapboxgl.ScaleControl({
+    //maxWidth: 80,
+    unit: 'imperial'
+});
+map.addControl(scale);
+//scale.setUnit('metric');
+
+// https://www.mapbox.com/mapbox-gl-js/api/#keyboardhandler#enable  but dont seems to do anything in chrome :(
+map.keyboard.enable();
+
+
+// ################################################################################# //
+// ################################################################################# //
+// #### code for non-event response 
+// #### think of this as "main", for the "misc" code 
+// ################################################################################# //
+// ################################################################################# //
+
+
+
+// sync move, but `require` not understood by chrome engine (??)
+// https://github.com/mapbox/mapbox-gl-sync-move
+// var syncMove = require('mapbox-gl-sync-move');
+
+// also see https://beta.observablehq.com/@siggyf/compare-two-maps-example
+
+// things are event-based, multi-threaded.
+// thus, this section is loaded before many of the above map.on('load'...) etc are loaded.
+// so the lon/lat hash cant be build until the addLayer returns.
+// Solution: have another fn that builds the hash
+// and invoke it from map.on('load'...)
+// Therefore, there is no real work in "main" section here.
+
+console.log( 'the "main" of script' );
+dbgTracer += "endOfScript \t";
+console.log(dbgTracer);
+
+</script>
+
+</body>
+</html>
