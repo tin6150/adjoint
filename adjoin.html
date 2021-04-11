@@ -291,10 +291,10 @@ mapbox tin117
 			<!-- Meteorological Episode, formerly seasonSelectorUI -->
             <select id="episodeSelectorUI">
                 <option value="NA"  disabled >Episode</option>	       
-                <option value="06">Jun</option>
 				<option value="07" selected="selected">Jul</option><!-- value="209" -->
                 <option value="08">Aug</option>
-                <option value="Mx">Max(Jun-Aug)</option>
+                <option value="09">Sep</option>
+                <option value="Mx">Max(Jul-Sep)</option>
              </select>
 
 			<!-- hour mixing, same name as before -->
@@ -476,7 +476,7 @@ mapbox tin117
 
     The unit is for S+ sensitivity, for each grid, the value =  change in ozone in the receptor (purple line marked region) when adding a unit of emission rate of NOx (or AVOC) to that grid. 
 
-    The unit is ppb (ozone change at the receptor) per gram of NOx (or AVOC) emitted per second per km2.   
+    The unit is ppb (ozone change at the receptor) per gram of NOx (or AVOC) emitted per second per km2 (km²)
 
     We may change the unit to be ppb per kg of emission per day or per year per grid later, but the units are interchangeable by some unit conversion. 
     But essentially, they all mean how much ozone at the receptor will change in response to a unit (defined by us) addition of emissions at a given grid.
@@ -497,7 +497,7 @@ mapbox tin117
     <div id='legend' class='legend' >
         <!--3³  2020.0206-->
         Impact on Receptor  <BR>
-        ppb/(g/[h*km2])
+        ppb/(g/[h*km²])
         <div><span style='background-color: #f2f3f4'></span>1.0e-6 and below</div>
         <div><span style='background-color: #00d900'></span>5.0e-6</div>
         <div><span style='background-color: #FEd976'></span>1.0e-5</div>   
@@ -513,7 +513,7 @@ mapbox tin117
     <!-- this create the bottom right info box -->
     <div class='map-overlay-features' id='features'>
             <!-- this is title of bottom right box -->
-            <H3>Impact on Receptor, in ppb/(g/[h*km2]) :</H3> 
+            <H3>Impact on Receptor, in ppb/(g/[h*km²]) :</H3> 
             <div id='pd'><p>(Hover over data point)</p></div>   <!-- static text, replaced later by JS -->
     </div>
 
@@ -769,10 +769,10 @@ function getInputFormSelection() {
         console.log( "--dbg-- getInputFormSelection() begin" );
         getInputSelectorCounter++;
         inputFormSelection  = document.getElementById("receptorSelectorUI").value;
-        inputFormSelection += document.getElementById("episodeSelectorUI").value;;
-        inputFormSelection += document.getElementById("precursorSelectorUI").value;;
-        inputFormSelection += document.getElementById("sensitivitySelectorUI").value;;
-        inputFormSelection += document.getElementById("hourSelectorUI").value;;
+        inputFormSelection += document.getElementById("precursorSelectorUI").value;    // order changed for Adjoin 2021.04
+        inputFormSelection += document.getElementById("episodeSelectorUI").value;
+        inputFormSelection += document.getElementById("hourSelectorUI").value;         // order changed for adjoin 2021.04
+        inputFormSelection += document.getElementById("sensitivitySelectorUI").value;
         feedback.innerHTML  = inputFormSelection;					
         if( currentLoadedMapLayer != "" ) {
             console.log( "--dbg-- getInputFormSelection() :: IF, at currentLoadedMapLayer not empty " );
@@ -1070,14 +1070,14 @@ map.on('mousemove', function (e) {
                 ouValString = ouVal.toPrecision(2);
            }
            text2display =  
-               "<H3>Impact on Receptor <BR> \n ppb/(g/[h*km2]) :</H3>\n" +
+               "<H3>Impact on Receptor <BR> \n ppb/(g/[h*km²]) :</H3>\n" +
                "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
                //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
                //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
                "" + ouValString 	+ "<BR>\n"  
       } else {
-        text2display = "<H3>Impact on Receptor <BR>\n ppb/(g/[h*km2]) :</H3>\n" + "- <BR>\n" 
-        (ppb/(g/h*km2))
+        text2display = "<H3>Impact on Receptor <BR>\n ppb/(g/[h*km²]) :</H3>\n" + "- <BR>\n" 
+        //--(ppb/(g/h*km2))    // this seems to be spurious string since 2020poc.  took off in Adjoin 2021.04
             //UiSelection = $("site").val();
             //+ "UI: " + UiSelection ;
       }
