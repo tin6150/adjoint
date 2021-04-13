@@ -237,7 +237,8 @@ mapbox tin117
 <!-- ################################################################# -->
 <!-- ################################################################# -->
 
-<body>
+<!--body onpageshow="hideSensitivitySelectorUI(this)"  dont work 2021.04-->
+<body> 
 
 <!-- Tyler had a navbar at top, having some menu, just trying to be closer to his model, i dont plan to have anything here  -->
 <!-- Hmm this does not appear -->
@@ -275,14 +276,14 @@ mapbox tin117
 			<!-- 1st data set for adjoin is DAC-topo3JulNOxSpAl.geojson -->
 			<!-- 2nd data set for adjoin is DAC-topo307AVOCSpAl.geojson -->
             <select id="receptorSelectorUI"> <!-- site -->  <!--to emulate Tyler <select id="polygon-layer-selector"> -->
-                <option value="NA"        disabled           >Receptor </option>	       
+                <option value="NA"        disabled           >Impact Metric</option>	       
                 <option value="dacsjvnew" selected='selected'>DAC burden</option>	
                 <option value="o3gt70sjv"                    >Ozone Exceedance</option>	
             </select>
 
 			<!-- Pollutant Type / Precursor, formerly sourceSelectorUI -->
             <select id="precursorSelectorUI">
-                <option value="NA" disabled >Pollutant</option>	       
+                <option value="NA" disabled >Ozone Precursor</option>	       
                 <option value="NOx">NOx</option>
                 <option value="AVOC">AVOC</option>
            </select>
@@ -299,14 +300,14 @@ mapbox tin117
 
 			<!-- hour mixing, same name as before -->
             <select id="hourSelectorUI"> <!--mixing depends on time of day-->
-                <option value="NA" disabled >Mixing Hours</option>	       
+                <option value="NA" disabled >Emission Time</option>	       
                 <option value="All" selected='selected'>Whole day</option>         <!--aka All Day-->
                 <option value="Day"                    >Day   (7am-7pm)</option>   <!--formerly Hi-->
                 <option value="Nit"                    >Night (7pm-7am)</option>   <!--formerly Lo-->
             </select>
 
-		    <!-- Sensitivity Type (new) -->
-            <select id="sensitivitySelectorUI">
+		    <!-- Sensitivity Type (new) [js will set style to hidden on this later in the code] -->
+            <select id="sensitivitySelectorUI"> 
                 <option value="NA" disabled >Sensitivity</option>	       
                 <option value="Sp">S+</option>
                 <option value="Sx" disabled>Sx</option>
@@ -557,6 +558,9 @@ mapbox tin117
 ////////////////////////////////////////////////////////////////////////////////
 var odorCalculatorVisible = false;
 var calculatorMode = "distance";  // "rate" is the other calculator
+
+// hide the drop down for S+ vs Sx since only one option avail now.  2021.04
+document.getElementById("sensitivitySelectorUI").style.visibility = "hidden";
 
 // actually no need to store this.  HTML DOM automatically store unless page reloaded
 //var rateInput4distCalc = 5.0;   		  // in ou/s     
