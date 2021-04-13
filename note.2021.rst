@@ -29,3 +29,16 @@ cd ~/tin-gh/inet-dev-class/mapbox/DATA_adjoin_0410
 ../caair_uploader.sh 2>&1 | tee -a  ../adjoin_uploader.2021_0411.log
 
 
+~~~~~
+
+created a new repo
+https://github.com/lbnl-science-it/adjoint
+to be eventually adjoint.lbl.gov
+
+seeding with the only files needed to render the web app (index.html -> adjoint.html)
++ README
++ LICENSE
+
+This site will remain as the code development, while leaving the lbnl-science-it/ repo as production.
+
+
