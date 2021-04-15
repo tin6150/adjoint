@@ -3,13 +3,13 @@
 
 
 <!--
-Adjoin 
+Adjoint 
 new version for 2021 data
 mapbox tin117
 -->
 <head>
     <meta charset='utf-8' />
-    <title>Adjoin - Sustainable Energy System & Scientific Computing Collaboration (t6@0411)</title>
+    <title>Adjoint - Sustainable Energy System & Scientific Computing Collaboration (t6@0415)</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
@@ -260,7 +260,7 @@ mapbox tin117
     <div id="attribution2+inputbar" class="attrib2_input_Css">
         <!-- had to add an extra css to hold this -->
 		<div id="attribution2"> <!-- class="attributionCss"> -->
-            <A HREF="https://github.com/lbnl-scienceit/adjoin">Adjoin</A>.  An app from the collaboration of Sustainable Energy System and Scientific Computing, LBNL.  
+            <A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>.  An app from the collaboration of Sustainable Energy System and Scientific Computing, LBNL.  
             © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown.
 		</div>
 
@@ -566,7 +566,7 @@ document.getElementById("sensitivitySelectorUI").style.visibility = "hidden";
 //var rateInput4distCalc = 5.0;   		  // in ou/s     
 //var distInput4rateCalc = 1000;		  // in m
 
-//--$("#scaleSelectorUI").hide();  // do not show the 100% scale selector.  remove hack when adjoin data is finally adopted and not just showing odor data ++FIXEM 2020.0118
+//--$("#scaleSelectorUI").hide();  // do not show the 100% scale selector.  remove hack when adjoint data is finally adopted and not just showing odor data ++FIXEM 2020.0118
 
 $("#ShowCalculator").click( function() {
 	console.log("#ShowCalculator was clicked" );
@@ -609,7 +609,7 @@ function getCurrentSite() {
 	// retrieve site name, so that formula knows which set of weights to use, 
 	// also set text of calculator accordingly
 	// currentSite = document.getElementById("siteSelectorUI").value;
-    currentSite = "SjFresno"; //adjoin dont need this
+    currentSite = "SjFresno"; //adjoint dont need this
 	return currentSite;
 };
 
@@ -694,7 +694,8 @@ var map = new mapboxgl.Map({
     hash: true,     // change URL with a hash of map zoom/lat/long    eg append: #15/37.434/-121.945   # notice it is lat/long in this url!!  so it is zoom/y/x
 
     //zoom: 13,
-    center: [-119.7871, 36.7378],  // Fresno W, N
+    //center: [-119.7871, 36.7378],  // Fresno W, N
+    center: [-120.15, 36.85],        // average LngLat of box StaRosa_Baker
     //center: [-122.447303, 37.753574]   SF
     //center: [-121.945, 37.434],  // alviso ZWEDC
     //center: [-121.5240213, 36.9481043],  // Gilroy Z Best Products
@@ -710,7 +711,8 @@ var map = new mapboxgl.Map({
     //zoom: 10  	// circle filled point data is said to be z0-z10, 10+ will "appear simplified"  
     //zoom: 9  		// see most of BAAQMD   // 5mi 
     //zoom: 8		// site-info as polygon said to be good at z0-z8.  8+ will "appear simplified"
-    zoom: 6.5 	//30mi  ## good for adjoin overview map 
+    //zoom: 6.5 	//30mi  ## good for adjoint 2020 POC overview map 
+    zoom: 6.2 		//??mi  ## good for adjoint 2021.04 StaRosa to Bakersfield overview map 
     //zoom: 6.1 	// see most of CA  	// 50mi    
     //zoom: 5.5		// see whole CA
     
@@ -751,7 +753,7 @@ function styleScaleLegendOpacity(attribute) {
       'interpolate',
       ['linear'],
       ['get', attribute],
-      // Tyler framework used 10 entries here .  adjoin need to reverse color and opacity scale as val closest to zero is most impactful (since range 1e-4 to 1e-14). 
+      // Tyler framework used 10 entries here .  adjoint need to reverse color and opacity scale as val closest to zero is most impactful (since range 1e-4 to 1e-14). 
         1.0e-6,  0.1,
         5.0e-6,  0.2, 
         1.0e-5,  0.3, 
@@ -773,9 +775,9 @@ function getInputFormSelection() {
         console.log( "--dbg-- getInputFormSelection() begin" );
         getInputSelectorCounter++;
         inputFormSelection  = document.getElementById("receptorSelectorUI").value;
-        inputFormSelection += document.getElementById("precursorSelectorUI").value;    // order changed for Adjoin 2021.04
+        inputFormSelection += document.getElementById("precursorSelectorUI").value;    // order changed for Adjoint 2021.04
         inputFormSelection += document.getElementById("episodeSelectorUI").value;
-        inputFormSelection += document.getElementById("hourSelectorUI").value;         // order changed for adjoin 2021.04
+        inputFormSelection += document.getElementById("hourSelectorUI").value;         // order changed for adjoint 2021.04
         inputFormSelection += document.getElementById("sensitivitySelectorUI").value;
         feedback.innerHTML  = inputFormSelection;					
         if( currentLoadedMapLayer != "" ) {
@@ -815,7 +817,6 @@ function getInputFormSelection() {
                 //visibility: zwedcPolyVis
                 //visibility: 'none'		// can use this to make ZWEDC data disapear ##
             },     
-			// around here should be groundzero of adjoin data layer not displaying... ++FIXME 
             // sn50.SfZwedcAllHiBi10x need to be in url and source-layer, w/ username in url, NO username in source-layer.  be careful!!    ++2020.0122
 		    // code seems fine, tile is loaded... maybe coloring problem?
             source: {
@@ -1013,8 +1014,8 @@ map.on('load', function () {
             }
         }
     });
-    //map.style.sourceCaches['attribution-layer']._source.attribution = "Adjoin. An app from the collaboration of SESG & SCG, LBNL. © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown";
-    map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://github.com/lbnl-scienceit/adjoin">Adjoin</A>';
+    //map.style.sourceCaches['attribution-layer']._source.attribution = "Adjoint. An app from the collaboration of SESG & SCG, LBNL. © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown";
+    map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>';
 
 
 
@@ -1068,7 +1069,7 @@ map.on('mousemove', function (e) {
       //console.log("map.on('mousemove'... currentLoadedMapLayer: " + currentLoadedMapLayer);  // too much log.  it was fine
       if (features.length > 0) {
            // display ozone measurements (formerly odor OU value) in a "meter reading box"
-		   // adjoin sample data line in gson is (max is same as val, just placed there for backward compat w/ smelly) : 
+		   // adjoint sample data line in gson is (max is same as val, just placed there for backward compat w/ smelly) : 
 		   // {"val": 4.85951553378072e-10, "color": 4.85951553378, "mantissa": 0.5217865073, "exponent": -30, "max": 4.85951553378072e-10 }
            ouVal = features[0].properties.val     ;   // adjoin O3, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
            //ouVal = features[0].properties.max   ;   // odor  
@@ -1081,13 +1082,13 @@ map.on('mousemove', function (e) {
            }
            text2display =  
                "<H3>Impact on Receptor <BR> \n ppb/(g/[h*km²]) :</H3>\n" +
-               "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoin O3  (Yuhan had value in header, but my gson wrote it as max)
+               "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoint O3  (Yuhan had value in header, but my gson wrote it as max)
                //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
                //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
                "" + ouValString 	+ "<BR>\n"  
       } else {
         text2display = "<H3>Impact on Receptor <BR>\n ppb/(g/[h*km²]) :</H3>\n" + "- <BR>\n" 
-        //--(ppb/(g/h*km2))    // this seems to be spurious string since 2020poc.  took off in Adjoin 2021.04
+        //--(ppb/(g/h*km2))    // this seems to be spurious string since 2020poc.  took off in Adjoint 2021.04
             //UiSelection = $("site").val();
             //+ "UI: " + UiSelection ;
       }
@@ -1126,7 +1127,7 @@ map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector
 //map.addControl(new mapboxgl.AttributionControl({
 map.addControl(new mapboxgl.AttributionControl({
         compact: true,  // set to false to add an EXTRA line with info below prefixed.  true add an (i) icon
-        customAttribution: '<A HREF="https://github.com/lbnl-scienceit/adjoin"> © Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown @ LBNL</A>'
+        customAttribution: '<A HREF="https://github.com/lbnl-science-it/adjoint"> © Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown @ LBNL</A>'
 }));
 
 // https://www.mapbox.com/mapbox-gl-js/api/#scalecontrol  // added to bottom, clobbering legend.
