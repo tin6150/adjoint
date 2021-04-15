@@ -1,16 +1,16 @@
         { "type": "FeatureCollection", "features": [
             { "type":       "Feature",
               "properties":
-                   {"version": "ver2_2021_04_13"}
+                   {"version": "ver3_2021_04_13"}
                    // properties is required (at least for mapbox), even if empty.  could give it name or timestamp
               ,
               "geometry": { "type": "Polygon", "coordinates": [ [
-                      [ -122.92, 39.00 ],     // LT
-                      [ -118.36, 39.00 ],     // RT
-                      [ -118.36, 34.65 ],     // RB
-                      [ -122.92, 34.65 ],     // LB
-                      [ -122.92, 39.00 ]      // LT
-                      // corrected bound info per tileset viewer -122.92,34.65,-118.36,39
+                      [ -122.921617885187, 38.9700811773257 ],     // LT
+                      [ -118.369451083458, 38.9700811773257 ],     // RT
+                      [ -118.369451083458, 34.6547740043536 ],     // RB
+                      [ -122.921617885187, 34.6547740043536 ],     // LB
+                      [ -122.921617885187, 38.9700811773257 ]      // LT
+                      // v3 info manually picked from dacsjvnew_AVOC_07_All_Sp.csv
                       // mapbox tileset processor does not seems to take comment in geojson either
               ] ] }  // strangely need to open two square bracket (support for multi-polygon?)
             }
