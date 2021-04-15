@@ -1,16 +1,16 @@
-        { "type": "FeatureCollection", "features": [
+{ "type": "FeatureCollection", "features": [
             { "type":       "Feature",
               "properties":
                    {"version": "ver2_2021_04_13"}
-                   // properties is required (at least for mapbox), even if empty.  could give it name or timestamp
               ,
               "geometry": { "type": "Polygon", "coordinates": [ [
-                      [ -121.9, 39.00 ],     // LT
-                      [ -118.4, 39.00 ],     // RT
-                      [ -118.4, 34.69 ],     // RB
-                      [ -121.9, 34.69 ],     // LB
-                      [ -121.9, 39.00 ],     // LT
-              ] ] }  // strangely need to open two square bracket (support for multi-polygon?)
+                      [ -121.9, 39.00 ], 
+                      [ -118.4, 39.00 ], 
+                      [ -118.4, 34.69 ],  
+                      [ -121.9, 34.69 ],  
+                      [ -121.9, 39.00 ] 
+              ] ] }  
             }
-        ] }
+        ] 
+}
 
