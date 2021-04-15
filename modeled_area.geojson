@@ -1,0 +1,17 @@
+        { "type": "FeatureCollection", "features": [
+            { "type":       "Feature",
+              "properties":
+                   {"version": "ver2_2021_04_13"}
+                   // properties is required (at least for mapbox), even if empty.  could give it name or timestamp
+              ,
+              "geometry": { "type": "Polygon", "coordinates": [ [
+                      [ -121.985, 37.407 ],     // LT
+                      [ -121.984, 37.407 ],     // RT
+                      [ -121.984, 37.406 ],     // RB
+                      [ -121.985, 37.406 ],     // LB
+                      [ -121.985, 37.407 ],     // LT, close it back.  5 points make a square :)
+              ] ] }  // strangely need to open two square bracket (support for multi-polygon?)
+            }
+            //,   // add comma iff there is next entry, json don't have a comment officially
+        ] }
+
