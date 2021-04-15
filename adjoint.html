@@ -805,33 +805,7 @@ function getInputFormSelection() {
         console.log( currentLoadedMapLayer );
         console.log( "--dbg-- getInputFormSelection() :: currentLoadedMapSource:" );
         console.log( currentLoadedMapSource );
-        //-- add a polygon outlining the receptor region --//
-        //-- eg tin117.receptor-polygon-DAC-topo3 --//
-        //   may need to add remove layer code if more than one receptor in future 
-        map.addLayer({
-            id: "Box_StaRosa_Bakersfield", //"tin117.987slj6i", //modeled_area_RosaBaker", //id: "receptor-polygon-DAC-topo3", 
-            type: "line",
-            source: { 
-                type: 'vector',
-                //url: 'mapbox://tin117.receptor-polygon-DAC-topo3'   // this is the irregular shaped boundary box NE of Visalia/Porterville used by adjoin 2020 poc 
-                url: 'mapbox://tin117.djoxt3r5' //tin.987slj6i' // web studio annoyingly dont use my filename 
-                //--url: 'mapbox://tin117.modeled_area_RosaBaker-9oszhy'  // aka tin117.987slj6i
-                //if ever need more than one boundar box, dynamic name may be needed in future
-            },
-            //"source-layer": "receptor-polygon-DAC-topo3",  
-            "source-layer": "modeled_area_RosaBaker-3tugdp",  // v2 corrected lngLat
-            //"source-layer": "modeled_area_RosaBaker-9oszhy",  // this is field name inside the vector layer
-            //"source-layer": "tin117.987slj6i",  
-            "layout": {
-                "line-join": "round",
-                "line-cap": "round"
-            },
-            "paint": {
-                "line-color": "#263aad", // blue  "#ff69b4", // red
-                "line-opacity": 0.8,
-                "line-width": 2 //1
-            }
-        }); // end map.addLayer(...) for receptor polygon
+
         //-- add ozone data that is colored per gradient --//
         noUseObjHandle = map.addLayer({
             id: currentLoadedMapLayer, //--id: 'caair',
@@ -998,7 +972,33 @@ map.on('load', function () {
     //~console.log(dbgTracer);
     //~window.dbgTracer += " -window- aftAddLayerSite_info_pt \t";     // window. is the (optional) special keyword to access global var, usable in browser (but not in server-side code like Node.js).
     //~console.log(window.dbgTracer);
-    
+
+    //-- adjoin 2021.04 only have a fixed modeled space, moved from (dyn change) user selection.  --//
+    //-- add a polygon outlining the receptor region --//
+    //-- eg tin117.receptor-polygon-DAC-topo3 --//
+    map.addLayer({
+            id: "Box_StaRosa_Bakersfield", //id: "receptor-polygon-DAC-topo3", 
+            type: "line",
+            source: { 
+                type: 'vector',
+                //url: 'mapbox://tin117.receptor-polygon-DAC-topo3'   // this is the irregular shaped boundary box NE of Visalia/Porterville used by adjoin 2020 poc 
+                url: 'mapbox://tin117.djoxt3r5' //tin.987slj6i' // web studio annoyingly generate a random tile id as of 2021.04
+                //if ever need more than one boundar box, dynamic name may be needed in future
+            },
+            //"source-layer": "receptor-polygon-DAC-topo3",  
+            "source-layer": "modeled_area_RosaBaker-3tugdp",  // v2 corrected lngLat
+            "layout": {
+                "line-join": "round",
+                "line-cap": "round"
+            },
+            "paint": {
+                "line-color": "#263aad", // blue  "#ff69b4", // red
+                "line-opacity": 0.8,
+                "line-width": 2 //1
+            }
+    }); // end map.addLayer(...) for receptor polygon
+
+ 
     //------------- tried to change attribution, but not too sucessful  ------------ 
     //   below isnt all that important.
     map.addLayer({
