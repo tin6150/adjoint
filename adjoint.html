@@ -809,16 +809,19 @@ function getInputFormSelection() {
         //-- eg tin117.receptor-polygon-DAC-topo3 --//
         //   may need to add remove layer code if more than one receptor in future 
         map.addLayer({
-            id: "modeled_area_RosaBaker", //id: "receptor-polygon-DAC-topo3", 
+            id: "Box_StaRosa_Bakersfield", //"tin117.987slj6i", //modeled_area_RosaBaker", //id: "receptor-polygon-DAC-topo3", 
             type: "line",
             source: { 
                 type: 'vector',
                 //url: 'mapbox://tin117.receptor-polygon-DAC-topo3'   // this is the irregular shaped boundary box NE of Visalia/Porterville used by adjoin 2020 poc 
-                url: 'mapbox://tin117.987slj6i' // web studio annoyingly dont use my filename //--url: 'mapbox://tin117.modeled_area_RosaBaker-90szhy'  // aka tin117.987slj6i
+                url: 'mapbox://tin117.djoxt3r5' //tin.987slj6i' // web studio annoyingly dont use my filename 
+                //--url: 'mapbox://tin117.modeled_area_RosaBaker-9oszhy'  // aka tin117.987slj6i
                 //if ever need more than one boundar box, dynamic name may be needed in future
             },
             //"source-layer": "receptor-polygon-DAC-topo3",  
-            "source-layer": "modeled_area_RosaBaker",  
+            "source-layer": "modeled_area_RosaBaker-3tugdp",  // v2 corrected lngLat
+            //"source-layer": "modeled_area_RosaBaker-9oszhy",  // this is field name inside the vector layer
+            //"source-layer": "tin117.987slj6i",  
             "layout": {
                 "line-join": "round",
                 "line-cap": "round"

@@ -1,16 +1,15 @@
-{ "type": "FeatureCollection", "features": [
+        { "type": "FeatureCollection", "features": [
             { "type":       "Feature",
               "properties":
                    {"version": "ver2_2021_04_13"}
               ,
               "geometry": { "type": "Polygon", "coordinates": [ [
-                      [ -121.9, 39.00 ], 
-                      [ -118.4, 39.00 ], 
-                      [ -118.4, 34.69 ],  
-                      [ -121.9, 34.69 ],  
-                      [ -121.9, 39.00 ] 
-              ] ] }  
+                      [ -122.92, 39.00 ],    
+                      [ -118.36, 39.00 ],   
+                      [ -118.36, 34.65 ],  
+                      [ -122.92, 34.65 ], 
+                      [ -122.92, 39.00 ] 
+              ] ] } 
             }
-        ] 
-}
+        ] }
 
