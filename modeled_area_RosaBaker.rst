@@ -1,6 +1,10 @@
 
 trying to get 4 vertices of the modeled area, then create gjson to upload to mapbox.
 
+the area roughly go from Santa Rosa to Bakerfield.
+Used these names in the file in case future version model a different area.
+it is actually north of Santa Rosa, closer to Lincoln for north bound, but wanted to also emphasize the western boundary.
+
 
 the for vertices of the modeled area, per R summary()
 
