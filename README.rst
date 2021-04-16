@@ -1,10 +1,10 @@
-Adjoin
-======
+Adjoint
+=======
 
 Collaboration with Ling Jin.
 Proof of Concept.  Data are for demo purpose only.  
 
-Tmp URL: https://tin6150.github.io/adjoin/ 
+Tmp URL: https://tin6150.github.io/adjoint/ 
 
 
 Thanks
