@@ -261,7 +261,7 @@ mapbox tin117
         <!-- had to add an extra css to hold this -->
 		<div id="attribution2"> <!-- class="attributionCss"> -->
             <A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>.  An app from the collaboration of Sustainable Energy System and Scientific Computing, LBNL.  
-            © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown.
+            © 2021 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown.
 		</div>
 
 
@@ -695,9 +695,9 @@ var map = new mapboxgl.Map({
     hash: true,     // change URL with a hash of map zoom/lat/long    eg append: #15/37.434/-121.945   # notice it is lat/long in this url!!  so it is zoom/y/x
 
     //zoom: 13,
-    //center: [-119.7871, 36.7378],  // Fresno W, N
-    //center: [-120.15, 36.85],        // average LngLat of box StaRosa_Baker
-    center: [-120.15, 36.85],        // average LngLat of box StaRosa_Baker  try file:///home/tin/tin-gh/adjoint/adjoint_3D.html#8.57/37.0007/-119.8629/0/63 
+    //center: [-119.7871, 36.7378],    // Fresno W, N
+    center: [-119.8629, 33.0007],      // fresno + hwy99 from URL #8.57/37.0007/-119.8629/0/63 
+    //+center: [-120.15, 36.85],       // average LngLat of box StaRosa_Baker  
     //center: [-122.447303, 37.753574]   SF
     //center: [-121.945, 37.434],  // alviso ZWEDC
     //center: [-121.5240213, 36.9481043],  // Gilroy Z Best Products
@@ -1018,7 +1018,8 @@ map.on('load', function () {
         }
     });
     //map.style.sourceCaches['attribution-layer']._source.attribution = "Adjoint. An app from the collaboration of SESG & SCG, LBNL. © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown";
-    map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>';
+    //--map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>';
+    //-- above actually throwing error in browser console for gl-js v2.2.0, not useful, disabling.
 
 
 
@@ -1145,9 +1146,9 @@ map.addControl(scale);
 // https://www.mapbox.com/mapbox-gl-js/api/#keyboardhandler#enable  but dont seems to do anything in chrome :(
 map.keyboard.enable();
 
-// for 3D topology -- https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setpitch
-//++map.setPitch(60);    
     
+// for 3D topology -- https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setpitch
+map.setPitch(60);    
 
     
 
