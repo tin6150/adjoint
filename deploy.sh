@@ -5,7 +5,7 @@
 DST=~/tin-gh/lbnl-science-it/adjoint
 SRC=.
 
-FileList="adjoint.html  favicon.png  README.rst"
+FileList="adjoint.html adjoint_3D.html  favicon.png  favicon.ico README.rst"
 # left out index.html which is a sym link
 # CNAME which is github specific for that site
 

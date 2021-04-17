@@ -11,8 +11,8 @@ mapbox tin117
     <meta charset='utf-8' />
     <title>Adjoint - Sustainable Energy System & Scientific Computing Collaboration (t6@04163d)</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css' rel='stylesheet' />
 
     <!-- Global site tag (gtag.js) - Google Analytics tin@lbl - to track user interest and future development effort -->
 	<!-- 2020.0118 new poroperty as "adjoin.lbl.gov", tracking id: UA-134625383-3 -->
@@ -680,14 +680,14 @@ var map = new mapboxgl.Map({
     //style: 'mapbox://styles/mapbox/dark-v9',		// alt basemap style
     //style: 'mapbox://styles/sn50/cjq8j89hqavyu2sqs3kctxqjj', 	// cali terrain, probably just the base layer map from mapbox.  used in early caair_zwedc
     //style: 'mapbox://styles/sn50/cjrd1zmyy1kds2tp6k4az7apr',    // sites_info_polyg  with satellite street as base layer, too many colors, dont show data well.
-    style: 'mapbox://styles/tin117/cknkrvdub0tx317pngcn1g0k2',   // tin117: Satellite-Streets-3D (default style just enabled 3D in terrain) 2011.04 
+    //~~style: 'mapbox://styles/tin117/cknkrvdub0tx317pngcn1g0k2',   // tin117: Satellite-Streets-3D (default style just enabled 3D in terrain) 2011.04 
     // #### wtf? mapboxstyles change here!
     //style: 'mapbox://styles/sn50/cjreie0fs4o0m2sqghg3ukiqn', 	// sites_info_pt_ctr with cali terrain     as base layer .  pt in center is pretty small, no need for TopLeft position.
     //style: 'mapbox://styles/sn50/cjrekq65d4o7o2slw5x262rb0',	// sites_info_polyg  + sites_info_pt_topLeft  with cali terrain.  corner point turns out to be bottom left, but whatever. 
     //style: 'mapbox://styles/tin117/ck5lywqlj46ab1ipixfayzju6', // 2020.0119 tin117 Basic (light)
-    //~~style: 'mapbox://styles/tin117/ck5un3c7t00wy1in3rn7v33ak',   // tin117: outdoor-NoLandUse (and off hill shades, to make it very uniform light background)  
-
-    
+    //++style: 'mapbox://styles/tin117/ck5un3c7t00wy1in3rn7v33ak',   // tin117: outdoor-NoLandUse (and off hill shades, to make it very uniform light background)  
+    style: 'mapbox://styles/tin117/cknkrnz1j0trc17pnvk0rt0k0',   // tin117: Outdoors-Terrain-HillShade-3D (customized color so greenspace is more of dirt color.  grey rock may have been ok but not tried
+    //--style: 'mapbox://styles/tin117/cknkxbc9z1fbm17k6bxe1ofa2', // tin117: Outdoors-3D (default style just enabled 3D in terrain) 2011.04   dramatic terrain create cool effect, but the color overlap with existing legend gradient
    
     // https://docs.mapbox.com/mapbox-gl-js/api/#attributioncontrol, but see the top part on options.attributionControl 
     // these are all options for the map object 
@@ -696,7 +696,8 @@ var map = new mapboxgl.Map({
 
     //zoom: 13,
     //center: [-119.7871, 36.7378],  // Fresno W, N
-    center: [-120.15, 36.85],        // average LngLat of box StaRosa_Baker
+    //center: [-120.15, 36.85],        // average LngLat of box StaRosa_Baker
+    center: [-120.15, 36.85],        // average LngLat of box StaRosa_Baker  try file:///home/tin/tin-gh/adjoint/adjoint_3D.html#8.57/37.0007/-119.8629/0/63 
     //center: [-122.447303, 37.753574]   SF
     //center: [-121.945, 37.434],  // alviso ZWEDC
     //center: [-121.5240213, 36.9481043],  // Gilroy Z Best Products
@@ -711,9 +712,10 @@ var map = new mapboxgl.Map({
     //zoom: 10 		// 3mi scale bar.  Fresno-Kingsburg vicinity, with some data from previous project visible.
     //zoom: 10  	// circle filled point data is said to be z0-z10, 10+ will "appear simplified"  
     //zoom: 9  		// see most of BAAQMD   // 5mi 
+    zoom: 8.6		// 10mi scale, good for 3D focus into Fresno + surrounding
     //zoom: 8		// site-info as polygon said to be good at z0-z8.  8+ will "appear simplified"
-    //zoom: 6.5 	//30mi  ## good for adjoint 2020 POC overview map 
-    zoom: 6.2 		//??mi  ## good for adjoint 2021.04 StaRosa to Bakersfield overview map 
+    //++zoom: 6.5 	//30mi  ## good for adjoint 2020 POC overview map 
+    //zoom: 6.2 		//??mi  ## good for adjoint 2021.04 StaRosa to Bakersfield overview map 
     //zoom: 6.1 	// see most of CA  	// 50mi    
     //zoom: 5.5		// see whole CA
     
@@ -1120,7 +1122,8 @@ map.on('mousemove', function (e) {
 // https://www.mapbox.com/mapbox-gl-js/api/#navigationcontrol
 //var nav = new mapboxgl.NavigationControl();
 //map.addControl(nav, 'top-left');
-map.addControl( new mapboxgl.NavigationControl(), 'top-right');  
+//map.addControl( new mapboxgl.NavigationControl(), 'top-right');  
+map.addControl( new mapboxgl.NavigationControl({visualizePitch: true}), 'top-right');   // work but pitching compass doesnt do any good now, may change in future?
 
 map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector('body')}));
 
@@ -1142,6 +1145,11 @@ map.addControl(scale);
 // https://www.mapbox.com/mapbox-gl-js/api/#keyboardhandler#enable  but dont seems to do anything in chrome :(
 map.keyboard.enable();
 
+// for 3D topology -- https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setpitch
+//++map.setPitch(60);    
+    
+
+    
 
 // ################################################################################# //
 // ################################################################################# //
