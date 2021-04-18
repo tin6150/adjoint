@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <!-- dev code for testing how to add pop up tip using html/css, 
+  code now incorporated into adjoint_3D.html and this file isn't really needed anymore
+  left here for future dev use -->
+<!-- ref https://www.w3schools.com/howto/howto_css_tooltip.asp -->
+<!-- tooltip arrow, but can't quite get right pointing arrow to work: https://www.w3schools.com/css/css_tooltip.asp -->
+<style>
+.tooltip {
+  position: relative;
+  display: inline-block;
+  /*border-bottom: 1px dotted black;*/
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 130%; /*240px;*/
+  background-color: #555;
+  color: #fff;
+  text-align:    left;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top:    -5px;
+  right:  105%;      /*left tooltip */
+  margin-left: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top:  10%;    
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+</style>
+<body style="text-align:center;">
+
+<h2>Tooltip</h2>
+<p>Move the mouse over the text below:</p>
+
+<div class="tooltip">
+			<select id="exaggerationSelectorUI">
+				<option value="NA" disabled>Terrain Elevation Dramatization</option>	       
+				<option value="0"                     > 0</option>
+				<option value="1"                     > 1x</option>
+				<option value="2"                     > 2x</option>
+				<option value="3"                     > 3x</option>
+				<option value="4" selected='selected' > 4x</option>
+				<option value="5"                     > 5x</option>
+				<option value="6"                     > 6x</option>
+				<option value="7"                     > 7x</option>
+				<option value="8"                     > 8x</option>
+				<option value="9"                     > 9x</option>
+				<option value="10"                    >10x</option>
+			</select>
+
+
+  <span class="tooltiptext">Terrain Elevation Dramatization<BR>
+    Ctrl + mouse drag on map: change pitch<BR>
+    0x = flat map<BR>
+    1x = 1:1 scale for elevation<BR>
+    4x = Dramatize elevation by 400%<BR>    
+  </span>
+</div>
+
+</body>
+</html>
+
+ 
