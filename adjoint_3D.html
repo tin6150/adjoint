@@ -237,7 +237,7 @@ mapbox tin117
 <!-- ################################################################# -->
 <!-- ################################################################# -->
 
-<!--body onpageshow="hideSensitivitySelectorUI(this)"  dont work 2021.04-->
+
 <body> 
 
 <!-- Tyler had a navbar at top, having some menu, just trying to be closer to his model, i dont plan to have anything here  -->
@@ -271,7 +271,7 @@ mapbox tin117
             calculator should be done, at least on smelly (unless this was not the latest code)
             button can perhaps be repurposed for help/info "pop up" in the future
 			<BUTTON id="ShowCalculator">Show Calculator</BUTTON>
-	-->
+		-->
             <!--html element for drop down picker goes here-->
 			<!-- 1st data set for adjoin is DAC-topo3JulNOxSpAl.geojson -->
 			<!-- 2nd data set for adjoin is DAC-topo307AVOCSpAl.geojson -->
@@ -306,7 +306,23 @@ mapbox tin117
                 <option value="Nit"                    >Night (7pm-7am)</option>   <!--formerly Lo-->
             </select>
 
+			<select id="exaggerationSelectorUI">
+				<option value="NA" disabled>Terrain Elevation Dramatization</option>	       
+				<option value="0"                     > 0</option>
+				<option value="1"                     > 1x</option>
+				<option value="2"                     > 2x</option>
+				<option value="3"                     > 3x</option>
+				<option value="4" selected='selected' > 4x</option>
+				<option value="5"                     > 5x</option>
+				<option value="6"                     > 6x</option>
+				<option value="7"                     > 7x</option>
+				<option value="8"                     > 8x</option>
+				<option value="9"                     > 9x</option>
+				<option value="10"                    >10x</option>
+			</select>
+
 		    <!-- Sensitivity Type (new) [js will set style to hidden on this later in the code] -->
+		    <!-- while hidden, it still squad the space, thus exaggerationSelector code placed above -->
             <select id="sensitivitySelectorUI"> 
                 <option value="NA" disabled >Sensitivity</option>	       
                 <option value="Sp">S+</option>
@@ -319,6 +335,7 @@ mapbox tin117
                 <option value="10x" selected='selected' ></option>
             </select>
 			-->
+
 
         </div><!-- end for inputbar -->
     </div><!-- end for "attribution2+inputbar"-->
@@ -659,6 +676,7 @@ var currentSite = "";
 var mapboxUser = "tin117";
 // below are mostly for debuging use
 var getInputSelectorCounter = 0;
+var getExaggerationInputCounter = 0; // little to no dbg use 
 var addLayerCounter = 0;
 var addSourceCounter = 0;
 var rmLayerCounter = 0;
@@ -769,6 +787,16 @@ function styleScaleLegendOpacity(attribute) {
     ]
 };
 
+function getExaggerationInputSelection() {
+        console.log( "--dbg-- getExaggerationInputSelection() begin" );
+        getExaggerationInputCounter++;
+        exaggerationInputSelection  = document.getElementById("exaggerationSelectorUI").value;
+		console.log( "--dbg-- getExaggerationInputSelection() about to set Dramatization to " + exaggerationInputSelection );
+		// https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setterrain
+		// get source name from console map.getTerrain()
+		map.setTerrain({ 'source': "mapbox://mapbox.mapbox-terrain-dem-v1", 'exaggeration': Number(exaggerationInputSelection)});
+        console.log( "--dbg-- getExaggerationInputSelection() end" );
+}
 
 // find out what combination is selected in the form selections UI ... eventually trigger loading maplayer...   
 // depending on combination, unload and load new layer data, then update map.  no need to do new map
@@ -1022,7 +1050,6 @@ map.on('load', function () {
     //-- above actually throwing error in browser console for gl-js v2.2.0, not useful, disabling.
 
 
-
     // ################################################ //
     // #### add handler for form selector
     var inputFormSelection = "";
@@ -1051,6 +1078,15 @@ map.on('load', function () {
         getInputFormSelection();
     });
     
+	// ################################################ //
+	// #### add handler for terrain exaggeration form selector // adjoint 3D
+	var exaggerationInputSelection = "";
+	var exa_selector = document.getElementById("exaggerationSelectorUI");
+	exa_selector.addEventListener('change',function function_name(e) {
+		getExaggerationInputSelection();
+	});
+
+
     dbgTracer += " map_on_load_END \t";
     console.log(dbgTracer);
 });  // end map.on('load'...) 
@@ -1149,6 +1185,7 @@ map.keyboard.enable();
     
 // for 3D topology -- https://docs.mapbox.com/mapbox-gl-js/api/map/#map#setpitch
 map.setPitch(60);    
+
 
     
 
