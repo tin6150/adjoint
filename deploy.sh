@@ -5,13 +5,14 @@
 DST=~/tin-gh/lbnl-science-it/adjoint
 SRC=.
 
-FileList="adjoint.html adjoint_3D.html  index.html favicon.png  favicon.ico README.rst LICENSE"
+FileList="adjoint.html adjoint_3D.html  favicon.png  favicon.ico README.rst LICENSE About.html figures"
 # left out:
 # - CNAME which is github specific for that site
 # - much of png favicon stuff
+# - index.html as that's a link and cp don't work properly
 
 for File in $FileList; do
-	cp -p $SRC/$File $DST
+	cp -pR $SRC/$File $DST
 done
 
 

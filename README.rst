@@ -1,3 +1,8 @@
+
+.. figure:: figures/adjoint1_exaggerate4x.jpg
+        :align: center
+        :alt: adjoint web app screenshot
+
 Adjoint
 =======
 
