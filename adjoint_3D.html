@@ -312,8 +312,8 @@ mapbox tin117
     <div id="attribution2+inputbar" class="attrib2_input_Css">
         <!-- had to add an extra css to hold this -->
 		<div id="attribution2"> <!-- class="attributionCss"> -->
-            <A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>:  An app from the collaboration of Sustainable Energy System and Scientific Computing, LBNL.  
-            <A HREF="https://github.com/lbnl-science-it/adjoint/blob/main/LICENSE">©</A> 2021 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown.
+            <A HREF="https://adjoint.lbl.gov/About.html">Adjoint</A>:  An app from the collaboration of Sustainable Energy System and Scientific Computing, LBNL.  
+            <A HREF="https://adjoint.lbl.gov/LICENSE">©</A> 2021 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown.
 		</div>
 
 
@@ -1135,7 +1135,7 @@ map.on('load', function () {
         }
     });
     //map.style.sourceCaches['attribution-layer']._source.attribution = "Adjoint. An app from the collaboration of SESG & SCG, LBNL. © 2020 Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown";
-    //--map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://github.com/lbnl-science-it/adjoint">Adjoint</A>';
+    //--map.style.sourceCaches['attribution-layer']._source.attribution =  '<A HREF="https://adjoint.lbl.gov/About.html">Adjoint</A>';
     //-- above actually throwing error in browser console for gl-js v2.2.0, not useful, disabling.
 
 
@@ -1257,7 +1257,7 @@ map.addControl(new mapboxgl.FullscreenControl({container: document.querySelector
 //map.addControl(new mapboxgl.AttributionControl({
 map.addControl(new mapboxgl.AttributionControl({
         compact: true,  // set to false to add an EXTRA line with info below prefixed.  true add an (i) icon
-        customAttribution: '<A HREF="https://github.com/lbnl-science-it/adjoint"> © Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown @ LBNL</A>'
+        customAttribution: '<A HREF="https://adjoint.lbl.gov/About.html"> © Tin Ho, Ling Jin, Yuhan Wang, Tyler Huntington, Corinne Scown @ LBNL</A>'
 }));
 
 // https://www.mapbox.com/mapbox-gl-js/api/#scalecontrol  // added to bottom, clobbering legend.
