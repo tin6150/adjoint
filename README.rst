@@ -28,7 +28,8 @@ use Ctrl + mouse drag to change pitch
 About
 =====
 
-See `About<https://adjoint.lbl.gov/About.html>`_ for further info about this web app.
+See https://adjoint.lbl.gov/About.html 
+for further info about this web app.
 
 Contact: tin (at) lbl.gov  or ljin (at) lbl.gov
 
