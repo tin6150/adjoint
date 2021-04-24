@@ -25,6 +25,14 @@ https://tin6150.github.io/adjoint/adjoint_3D.html#8.57/37.0007/-119.8629/0/63 
 For 3D rendering, 
 use Ctrl + mouse drag to change pitch
 
+About
+=====
+
+See `About<https://adjoint.lbl.gov/About.html>`_ for further info about this web app.
+
+Contact: tin (at) lbl.gov  or ljin (at) lbl.gov
+
+
 Thanks
 ======
 
