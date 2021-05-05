@@ -9,10 +9,13 @@ FileList="adjoint.html adjoint_3D.html  index.html favicon.png  favicon.ico READ
 # left out:
 # - CNAME which is github specific for that site
 # - much of png favicon stuff
+ 
 
-for File in $FileList; do
-	cp -p $SRC/$File $DST
-done
+# deploy with tar instead of cp to properly handle sym link)
+( cd $SRC; tar cf - $FileList ) | (cd $DST ; tar xf - )
+#for File in $FileList; do
+	##cp -p $SRC/$File $DST
+#done
 
 
 
