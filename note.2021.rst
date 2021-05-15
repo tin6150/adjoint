@@ -30,6 +30,11 @@ source venv4mapbox/bin/activate
 cd ~/tin-gh/inet-dev-class/mapbox/DATA_adjoin_0410
 ../caair_uploader.sh 2>&1 | tee -a  ../adjoin_uploader.2021_0411.log
 
+So there were two uploads, 2021/04/11 and a smaller fix for 2021/04/13.
+They corresponds to the two peaks with tileset processing charge for 1m.
+https://mail.google.com/mail/u/2/#search/mapbox+billing/FMfcgxwLtkWgbKQFzwxrQjJNbFLFGGSK?projector=1
+
+In communication with Mikel Maron to get them waived and asking for mapbox sponshorship for tin117 (t@berk)
 
 ~~~~~
 
@@ -56,3 +61,14 @@ need to make request there.
 ~~~~~~~
 
 ps. ran data conversion from csv to mapbox tile twice circa 2021.04 as first batch of data had some duplication/error
+
+
+~~~~~
+
+2021.0515
+
+Need to retire use of old upload method in inet-dev-class/mapbox/caair_uploader.sh
+and transition to use MTS, Mapbox Tiling Service, which use a json description file to describe 10m resolution.
+these programmer thing... a command line option for upload would have been so much easier to script rather than generate so many json.  though maybe they just don't expect so many tilesets.
+
+
