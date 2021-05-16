@@ -71,4 +71,15 @@ Need to retire use of old upload method in inet-dev-class/mapbox/caair_uploader.
 and transition to use MTS, Mapbox Tiling Service, which use a json description file to describe 10m resolution.
 these programmer thing... a command line option for upload would have been so much easier to script rather than generate so many json.  though maybe they just don't expect so many tilesets.
 
+https://docs.mapbox.com/mapbox-tiling-service/guides/
+
+for 4 km grid, prob need zoom between 11 and 16.  try zoom 14
+but do i care to have a max zoom?  i don't care if it is oversimplified, but a colored grid is still useuful info.
+
+actually, mapbox minzoom and maxzoom is just so there is programatic way to say when feature are visible or not.
+for polygon data, for map display of features, it make sense some large polygon to be not visible when zoom is high.
+but i only care for area to be colored in certain way, so i should allow for all zoom.
+just so long as can set resolution to 10m should be good.
+mapbox absolute max zoom is 22.
+
 
