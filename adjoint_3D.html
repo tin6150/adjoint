@@ -6,6 +6,8 @@
 Adjoint 
 new version for 2021 data
 mapbox tin117
+
+2021.0522 update: hoover box query updated to use "max", the name of feature in the geojson.ld (mts 10m "comapact" version), instead of old "val"
 -->
 <head>
     <meta charset='utf-8' />
@@ -953,7 +955,7 @@ function getInputFormSelection() {
                     'fill-antialias': false,    // remove gridline
                     //'fill-color': 'rgba(61,153,80,0.55)',                    // https://www.mapbox.com/help/how-web-apps-work/#use-mapbox-gl-js-with-react ##
                     // see git log 1dff205 for older version that had 'table' and in-place code here for fill-color and fill-opacity
-                    'fill-color': styleScaleLegendPolys('max'),  // this max atttribute is just a place holder...
+                    'fill-color': styleScaleLegendPolys('max'),  // this max atttribute is just a place holder...   or is it the property in the .geojson?
                     //'fill-opacity': polyLayerOpacity,
                     //'fill-opacity': 0.6
                     'fill-opacity': styleScaleLegendOpacity('max') // max attribute just a place holder
@@ -1198,9 +1200,9 @@ map.on('mousemove', function (e) {
       //console.log("map.on('mousemove'... currentLoadedMapLayer: " + currentLoadedMapLayer);  // too much log.  it was fine
       if (features.length > 0) {
            // display ozone measurements (formerly odor OU value) in a "meter reading box"
-		   // adjoint sample data line in gson is (max is same as val, just placed there for backward compat w/ smelly) : 
+		   // adjoint sample data line in gson is (max used by adjoint mts 10m "compact" geojson.ld, smelly had used val) : 
 		   // {"val": 4.85951553378072e-10, "color": 4.85951553378, "mantissa": 0.5217865073, "exponent": -30, "max": 4.85951553378072e-10 }
-           ouVal = features[0].properties.val     ;   // adjoin O₃, Yuhan header comment is value, but my gson coded it as max, so no change should be needed
+           ouVal = features[0].properties.max     ;   // adjoin O₃, Yuhan header comment is value, but my gson coded it as max for 10m mts tileset for 2021.0520
            //ouVal = features[0].properties.max   ;   // odor  
            //ouVal = features[0].properties.exponent   ;   // adjoin, should eventually try color which has a shifted value (offset by 1e10 or so) 
 		   // adjoin use 'val', try color(weight), color(rgb), mantissa, exponent ++
@@ -1211,7 +1213,7 @@ map.on('mousemove', function (e) {
            }
            text2display =  
                "<H3>Impact on Receptor <BR> \n ppb/(g/[h*km²]) :</H3>\n" +
-               "" + features[0].properties.val.toExponential(3) 	+ "<BR>\n"   // adjoint O3  (Yuhan had value in header, but my gson wrote it as max)
+               "" + features[0].properties.max.toExponential(3) 	+ "<BR>\n"   // adjoint O3  (Yuhan had value in header, but my gson wrote it as max)
                //"" + features[0].properties.max.toPrecision(3) 	+ "<BR>\n"       // odor
                //"" + features[0].properties.max.toExponential(1) 	+ "<BR>\n"  
                "" + ouValString 	+ "<BR>\n"  
