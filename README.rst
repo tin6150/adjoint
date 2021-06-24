@@ -40,6 +40,6 @@ Contact: tin (at) lbl.gov  or ljin (at) lbl.gov
 Thanks
 ======
 
-A big shoutout to Mapbox.com for the generous free hosting tier!
+A big shoutout to Mapbox.com Community Team for support and the generous free hosting tier!
 
 
